@@ -1,0 +1,30 @@
+#app {
+    height: 100%;
+  }
+
+  .swiper {
+    width: 100%;
+    height: 100%;
+    background-color: aquamarine;
+  }
+  
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    background-color: aquamarine !important;
+
+  
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  

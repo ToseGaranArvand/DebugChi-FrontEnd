@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'iran-sans';
+  src: url(./fonts/IRANSans\(FaNum\)_Medium.ttf);
+}
+
+
+
+@font-face {
+  font-family: 'iran-sans-md';
+  src: url(./fonts/IRANSans\(FaNum\)_Medium.ttf);
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'iran-sans-ul';
+  src: url(./fonts/IRANSans\(FaNum\)_UltraLight.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'iran-sans-lt';
+  src: url(./fonts/IRANSans\(FaNum\)_Light.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'iran-sans-bl';
+  src: url(./fonts/IRANSans\(FaNum\)_Black.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'en-font';
+  src: url(./fonts/GeistVF.woff);
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'en-font-mono';
+  src: url(./fonts/GeistMonoVF.woff);
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+
+body {
+  font-family: iran-sans;
+  /* font-size: 20px; */
+}
+
+/* custom-scrollbar for Tailwind */
+.scrollbar-left {
+  direction: ltr;
+  /* direction: rtl; برای چپ قرار گرفتن اسکرول */
+}
+
+.scrollbar-left::-webkit-scrollbar {
+  width: 8px;
+  padding-right: 12px;
+}
+
+.scrollbar-left::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-left::-webkit-scrollbar-thumb {
+  background-color: #52525280;
+  border-radius: 8px;
+  position: absolute;
+  left: 10px;
+}
+
+.scrollbar-left::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* optional: hide scrollbar on small screens */
+@media (max-width: 640px) {
+  .scrollbar-left::-webkit-scrollbar {
+    display: none;
+  }
+}

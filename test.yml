@@ -1,0 +1,15 @@
+config:
+  target: 'http://localhost:8001'  # آدرس سرور شما
+  phases:
+    - duration: 60  # مدت زمان تست (در اینجا 60 ثانیه)
+      arrivalRate: 1000  # تعداد درخواست‌ها در هر ثانیه
+      name: "ramp up"  # تدریجاً تعداد درخواست‌ها افزایش می‌یابد
+
+scenarios:
+  - flow:
+      - post:
+          url: "/message"  # مسیر API که می‌خواهید تست کنید
+          json:
+            sender_uuid: "test_sender_uuid"
+            receiver_uuid: "test_receiver_uuid"
+            message: "test_message"

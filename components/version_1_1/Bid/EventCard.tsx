@@ -2,6 +2,7 @@
 
 import { Image as ImageDetails, Main } from "@/components/types/classDetails";
 import type { Project } from "@/components/types/tender.type";
+import Cookies from "js-cookie";
 import {
   Drawer,
   DrawerContent,
@@ -20,6 +21,8 @@ import {
 import { Download, Ellipsis, Projector } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { CourseDetailContainer } from "./CourseDetailContainer/CourseDetailContainer";
+import { perform_get } from "@/lib/api";
 
 export default function EventCard({
   data,
@@ -60,11 +63,7 @@ export default function EventCard({
 
   return (
     <>
-      <Button
-      className="bg-default-50"
-      radius="lg"
-        onPress={onOpen}
-      >
+      <Button className="bg-default-50" radius="lg" onPress={onOpen}>
         بررسی سرفصل
       </Button>
       <Drawer
@@ -79,7 +78,8 @@ export default function EventCard({
         <DrawerContent>
           {(onClose) => (
             <>
-              <DrawerHeader className="absolute top-0 inset-x-0 z-50 flex flex-row gap-2 px-2 py-2 border-b border-default-200/50 justify-between bg-content1/50 backdrop-saturate-150 backdrop-blur-lg">
+              <CourseDetailContainer />
+              {/* <DrawerHeader className="absolute top-0 inset-x-0 z-50 flex flex-row gap-2 px-2 py-2 border-b border-default-200/50 justify-between bg-content1/50 backdrop-saturate-150 backdrop-blur-lg">
                 <Tooltip content="Close">
                   <Button
                     isIconOnly
@@ -128,7 +128,7 @@ export default function EventCard({
                   </Button>
                 </div>
                 <div className="flex gap-1 items-center"></div>
-              </DrawerHeader>
+              </DrawerHeader> */}
               <DrawerBody className="pt-16" dir="rtl">
                 <div className="flex flex-col gap-2 w-full justify-center items-center pt-4">
                   <Image

@@ -13,7 +13,6 @@ import { Divider } from "@heroui/react";
 type Props = {};
 
 const UserResume = ({ data }: { data: Main }) => {
-  console.log(data);
   return (
     <div className="w-full flex flex-col gap-10 items-center h-auto box-border p-5">
       <LanguageSection

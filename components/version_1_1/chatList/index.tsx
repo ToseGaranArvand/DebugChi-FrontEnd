@@ -24,10 +24,9 @@ const ChatList = (props: Props) => {
   const path = usePathname();
   const session_id = path.split("/")[2];
   const { filter } = useRequestFilter();
-  const currentPath = usePathname()
+  const currentPath = usePathname();
 
-
-  const is_main = currentPath === '/'
+  const is_main = currentPath === "/";
 
   const userHandler = (user: any) => {
     setSelectedUser(user);
@@ -48,7 +47,6 @@ const ChatList = (props: Props) => {
   }, []);
 
   useEffect(() => {
-
     if (!session_id || !chatList) return;
     const findAndSetUser = () => {
       const consult = chatList.opened_consult.find(
@@ -68,9 +66,10 @@ const ChatList = (props: Props) => {
     findAndSetUser();
   }, [chatList, session_id]);
 
-
   const allChats = useMemo(() => {
     if (!chatList) return [];
+    if (!chatList || !chatList.opened_consult || !chatList.opened_debug)
+      return [];
     return [...chatList.opened_consult, ...chatList.opened_debug];
   }, [chatList]);
 
@@ -96,15 +95,15 @@ const ChatList = (props: Props) => {
 
   return (
     <div className="flex flex-col gap-4 box-border p-4 flex-1  overflow-y-auto">
-      {selectedUser && !is_main &&(
+      {selectedUser && !is_main && (
         <UserCard
           user={selectedUser}
           data={data}
           defaultSession={defaultSession || ""}
         />
       )}
-      
-      {filteredChats.length > 0 &&  
+
+      {filteredChats.length > 0 &&
         filteredChats.map((chat) => {
           const isSelected = chat.session_id === session_id;
           return (
@@ -117,7 +116,7 @@ const ChatList = (props: Props) => {
             />
           );
         })}
-        
+
       {filteredChats.length === 0 && (
         <p className="text-center text-foreground-500">موردی یافت نشد</p>
       )}

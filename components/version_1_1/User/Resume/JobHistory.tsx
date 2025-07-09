@@ -209,6 +209,8 @@ useEffect(()=>{
   const addNewJob = async () => {
 
     const response = await perform_post('api/v1/job_history/',{...newJob,user:user_id})
+    console.log(user_id);
+    
 
     if (response.status == 400){
       console.log(response)

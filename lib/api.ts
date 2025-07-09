@@ -83,12 +83,12 @@ export const getUserChatList = async (token: string) => {
 export const perform_post = async (url: string, data: any, token?: string) => {
   try {
     const post_data = await axios.post(`${process.env.server}/${url}`, data, {
-      headers:  headers(),
+      headers: headers(),
     });
     const response = await post_data.data;
     return response;
   } catch (e: any) {
-    console.log(e.response)
+    console.log(e.response);
     return {
       data: e.response.data,
       status: e.status,
@@ -111,17 +111,38 @@ export const perform_update = async (url: string, data: any) => {
   }
 };
 
-export const perform_get = async (url: string,token?:string) => {
-
+export const perform_get = async (url: string, token?: string) => {
   try {
     const request = await axios.get(`${process.env.server}/${url}`, {
-      headers: !token  ? headers() : {
-        Authorization:`Bearer ${token}`,
-        "Content-Type":"application/json"
-      },
+      headers: !token
+        ? headers()
+        : {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
     });
     const response = await request.data;
     return response;
+  } catch (e: any) {
+    return {
+      data: e.response?.data ?? null,
+      status: e.status ?? 500,
+    };
+  }
+};
+
+export const perform_delete = async (url: string, data?: any) => {
+  try {
+    const request = await axios.delete(`${process.env.server}/${url}`, {
+      headers: headers(),
+    });
+    console.log(request);
+    if (request.status == 204) {
+      return {
+        success: true,
+        message: "با موفقیت حذف شد",
+      };
+    }
   } catch (e: any) {
     return {
       data: e.response.data,
@@ -129,31 +150,6 @@ export const perform_get = async (url: string,token?:string) => {
     };
   }
 };
-
-export const perform_delete = async (url:string, data?:any)=>{
-  try{
-    const request = await axios.delete(`${process.env.server}/${url}`,{
-      headers:headers()
-    })
-    console.log(request)
-    if (request.status == 204 ){
-      return {
-        success:true,
-        message:"با موفقیت حذف شد"
-      }
-    }
-    
-  }
-  catch(e:any){
-    return {
-      data: e.response.data,
-      status: e.status,
-    };
-
-  }
-}
-
-
 
 export const perform_patch = async (url: string, data: any, token?: string) => {
   try {
@@ -173,13 +169,13 @@ export const perform_patch = async (url: string, data: any, token?: string) => {
 export const perform_chat_post = async (url: string, data: any) => {
   try {
     const post_data = await axios.post(`${process.env.server}/${url}`, data, {
-      headers: headers(), 
+      headers: headers(),
       withCredentials: true,
     });
     const response = await post_data.data;
     return response;
   } catch (e: any) {
-    console.log(e.response)
+    console.log(e.response);
     return {
       data: e.response.data,
       status: e.status,

@@ -51,14 +51,14 @@ const page = async ({ searchParams }: {
       <div className="flex flex-1 box-border gap-4 bg-community " dir="rtl">
         <div className="flex-1 flex flex-col h-full overflow-y-auto">
           {type == "debugers" ? (
-            <FilterProvider users={response}>
+            <FilterProvider users={response.data}>
               <FilterControls />
-              <EngineersList users={response} />
+              <EngineersList users={response.data} />
             </FilterProvider>
           ) : (
             <FilterProvider users={[]}>
               <FilterControls />
-              <VideoList data={response} />
+              <VideoList data={response.data} />
               {/* <EngineersList users={response} /> */}
             </FilterProvider>
           )}

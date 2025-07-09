@@ -28,16 +28,20 @@ const page = async ({ params }: any) => {
             <BidFilter />
           </div>
           <div className="flex h-full box-border gap-4 min-h-0 overflow-hidden">
-            <div className={`flex flex-col ${token ? 'w-full flex-1' : 'max-w-7xl mx-auto'}  min-h-0 overflow-hidden`}>
+            <div
+              className={`flex flex-col ${
+                token ? "w-full flex-1" : "max-w-7xl mx-auto"
+              }  min-h-0 overflow-hidden`}
+            >
               <Bid data={tender} />
             </div>
-            {token ? (
+            {/* {token ? (
               <div className="bg-bg_card border border-default-100 rounded-2xl w-auto p-4 mt-24">
                 <TenderProvider>
                   <BidIncomingList />
                 </TenderProvider>
               </div>
-            ) : null}
+            ) : null} */}
           </div>
         </div>
       </BidFilterProvider>

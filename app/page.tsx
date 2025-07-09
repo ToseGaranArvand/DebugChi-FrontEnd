@@ -1,4 +1,3 @@
-
 import AIBotProfile from "@/components/ui/Profile/aibotprofile";
 import Sidebar from "@/components/version_1_1/Sidebar";
 import SidebarBody from "@/components/version_1_1/Sidebar/SideBar";
@@ -20,28 +19,40 @@ import BackgroundGlobalGradient from "@/components/version_1_1/ui/backgorund-gra
 import ClientDebuggerWrapper from "@/components/client-debugger-wrapper";
 import DebuggerExam from "@/components/debugger-exam";
 export default async function Home() {
-  const token = (await cookies()).get("token")?.value
-  const client = await clientPromise
-  const db = client.db("debugchi_front")
-  const faq = await db.collection("faq").find().toArray()
+  const token = (await cookies()).get("token")?.value;
+  const client = await clientPromise;
+  const db = client.db("debugchi_front");
+  const faq = await db.collection("faq").find().toArray();
 
   const serializedFaq = faq.map((item) => ({
     ...item,
     _id: item._id.toString(),
-  }))
+  }));
 
-  const questions = await perform_get("questions/list/")
+  const questions = await perform_get("questions/list/");
 
   if (token) {
-    const response = await perform_get("auths/user_info/", token)
-    console.log(response.verifications.score_verified);
-    if (response.user_roles.includes("debugger")) {
-      if(response.verifications.score_verified){
-        return <ClientDebuggerWrapper response={response} serializedFaq={serializedFaq} token={token} />
-        
-      }else{return <DebuggerExam token={token} />}
-      
+    const response = await perform_get("auths/user_info/", token);
+console.log(response);
+
+    if ("user_roles" in response && "verifications" in response) {
+      if (response.user_roles.includes("debugger")) {
+        if (response.verifications.score_verified) {
+          return (
+            <ClientDebuggerWrapper
+              response={response}
+              serializedFaq={serializedFaq}
+              token={token}
+            />
+          );
+        } else {
+          return <DebuggerExam token={token} />;
+        }
+      }
     }
+
+    // اگر response ساختار نداشت:
+    console.warn("ساختار پاسخ نامعتبر بود:", response);
   }
 
   return (
@@ -52,7 +63,7 @@ export default async function Home() {
       </Sidebar>
 
       <div className="flex-1 flex relative h-full overflow-hidden box-border p-4 gap-4">
-        <BackgroundGlobalGradient />
+        <BackgroundGlobalGradient/>
         <div className="relative flex flex-col h-full w-full">
           <FindUser />
           <AnswerProvider>
@@ -66,5 +77,5 @@ export default async function Home() {
         </div>
       </div>
     </main>
-  )
+  );
 }

@@ -169,13 +169,13 @@ const Card = ({ tender, bids }: Props) => {
   return (
     <div className="flex flex-col gap-2">
       <div
-        className="w- min-h-[320px] bg-bg_card border border-default-100 rounded-2xl box-border flex p-4 items-center"
+        className="w- min-h-[320px] bg-[bg_card] border border-default-100 rounded-2xl box-border flex p-4 items-center"
         dir="rtl"
       >
-        <div className="relative w-96 h-auto">
+        <div className="relative 2xl:w-96 w-48 h-auto">
           <Image
             className="rounded-lg"
-            src={tender.image || "/user.jpg"}
+            src={"/user.jpg"}
             alt={tender.title}
             width={360}
             height={280}

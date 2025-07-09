@@ -1,0 +1,44 @@
+/* ------------- modal -------------------- */
+.ant-modal-content {
+  padding: 0 !important;
+  background: transparent !important;
+}
+.ant-modal-footer {
+  margin-top: 0 !important;
+}
+
+.ant-collapse-content-box {
+  padding: 0 !important;
+}
+.ant-collapse-header-text {
+  width: 90%;
+}
+
+/* ------------- slider -------------------- */
+
+.swiper-initialized {
+  height: 100%;
+  padding-bottom: 0 !important;
+}
+
+/* بولت پیش‌فرض */
+.swiper-pagination-bullet {
+  background: #d9d9d966 !important;
+  opacity: 1 !important;
+}
+
+/* بولت فعال */
+.swiper-pagination-bullet-active {
+  background: white !important;
+}
+
+/* ------------- input -------------------- */
+.ant-slider-handle::after {
+  background: #80ff00 !important;
+  border-color: #80ff00 !important;
+  box-shadow: 0 0 0 2.5px #80ff00 !important;
+}
+/* ------------- select option -------------------- */
+.ant-collapse-header{
+  padding: 0 !important;
+}

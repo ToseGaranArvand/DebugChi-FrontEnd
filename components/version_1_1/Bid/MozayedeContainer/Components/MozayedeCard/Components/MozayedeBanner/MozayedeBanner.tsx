@@ -17,11 +17,11 @@ const MozayedeBanner: FC<IMozayedeBannerProps> = ({ image }) => {
         }}
         className="h-[1px]"
       ></div>
-      <div className="sm:hidden h-[89px] my-[3px]">
+      <div className="lg:hidden h-[89px] w-full overflow-hidden my-[3px]">
         <Image
           src={image}
           alt="banner"
-          className="w-full h-full"
+          className="w-full h-auto"
           width={300}
           height={90}
         />
@@ -31,7 +31,7 @@ const MozayedeBanner: FC<IMozayedeBannerProps> = ({ image }) => {
           background:
             "linear-gradient(to right, #ffffff00 0%, #ffffff44 50%, #ffffff00 100%)",
         }}
-        className="sm:hidden h-[1px]"
+        className="lg:hidden h-[1px]"
       ></div>
     </>
   );

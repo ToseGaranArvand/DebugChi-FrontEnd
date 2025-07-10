@@ -33,7 +33,6 @@ export default async function Home() {
 
   if (token) {
     const response = await perform_get("auths/user_info/", token);
-console.log(response);
 
     if ("user_roles" in response && "verifications" in response) {
       if (response.user_roles.includes("debugger")) {
@@ -79,3 +78,8 @@ console.log(response);
     </main>
   );
 }
+
+
+// 09303362613      دانش اموز
+// 09361226758
+// 12345678

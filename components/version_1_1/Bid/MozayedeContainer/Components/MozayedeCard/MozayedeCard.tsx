@@ -9,6 +9,7 @@ import { MozayedeFooter } from "./Components/MozayedeFooter/MozayedeFooter";
 // core
 import { MozayedeFinishedBanner } from "./Components/MozayedeFinishedBanner/MozayedeFinishedBanner";
 import Image from "next/image";
+import { Tender } from "@/components/types/tender.type";
 
 interface IauctionDataPropTypes {
   id: number;
@@ -32,16 +33,17 @@ interface IauctionDataPropTypes {
 }
 type IMozayedeCardProps = {
   auctionData: IauctionDataPropTypes;
+  tender: Tender;
 };
 
-const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData }) => {
+const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData, tender }) => {
   const [isCoursedFinish, setIsCoursedFinish] = useState(false);
 
   return (
-    <div className="px-1">
-      <div className="p-[1px] bg-gradient-to-l from-black to-[#242424] rounded-2xl">
-        <div className="w-full flex items-center sm:bg-[#0F0F0F] bg-[#1C1C1CB2] sm:border-none border border-[#ffffff63] sm:rounded-2xl rounded-[20px]">
-          <div className="w-[351px] h-[288px] p-2">
+    <div className="w-full px-1 flex flex-col lg:items-end">
+      <div className="w-full p-[1px] bg-gradient-to-l from-black to-[#242424] rounded-2xl">
+        <div className="w-full flex items-center lg:bg-[#0F0F0F] bg-[#1C1C1CB2] lg:border-none border border-[#ffffff63] lg:rounded-2xl rounded-[20px]">
+          <div className="lg:block hidden w-[343px] h-[280px] mr-2">
             <Image
               src="/images/general/LabelSample3.png"
               alt=""
@@ -50,7 +52,7 @@ const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData }) => {
               className="w-full h-full rounded-2xl"
             />
           </div>
-          <div className="flex-1">
+          <div className="lg:w-[calc(100%-343px)] flex-1">
             <MozayedeCardHeader
               username={auctionData.username}
               profile={auctionData.profile}
@@ -58,15 +60,16 @@ const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData }) => {
             />
 
             <MozayedeBanner image={auctionData.image} />
-            <div className="px-3 pt-[11px] pb-[15px]">
+            <div className="px-3 pt-[11px] lg:pb-[1px] pb-[15px]">
               <MozayedeContent
                 id={auctionData.id}
                 title={auctionData.title}
                 description={auctionData.description}
                 bids={auctionData.bids}
                 isCoursedFinish={isCoursedFinish}
+                tender={tender}
               />
-              <div className="sm:hidden">
+              <div className="lg:hidden">
                 {isCoursedFinish ? (
                   <MozayedeFinishedBanner />
                 ) : (

@@ -56,13 +56,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
+        {data.navMain.map((item , index) => (
+          <SidebarGroup key={index}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title} className="my-2">
+                {item.items.map((item, index) => (
+                  <SidebarMenuItem key={index} className="my-2">
                     <SidebarMenuButton asChild className="w-full h-10 hover:bg-gray-200">
                       <Link href={item.url} className={`relative flex gap-6 text-lg ${path === item.url ? 'bg-blue-100 text-blue-500' : '' }`}>
                       <item.icon className="!w-5 !h-5"/>

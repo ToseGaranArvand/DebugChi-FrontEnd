@@ -63,7 +63,10 @@ export default function EventCard({
 
   return (
     <>
-      <Button className="bg-default-50" radius="lg" onPress={onOpen}>
+      <Button
+        className="w-[107px] lg:w-full h-[49px] lg:h-[34px] !bg-[#252328] rounded-2xl text-center text-sm"
+        onPress={onOpen}
+      >
         بررسی سرفصل
       </Button>
       <Drawer
@@ -129,7 +132,7 @@ export default function EventCard({
                 </div>
                 <div className="flex gap-1 items-center"></div>
               </DrawerHeader> */}
-              <DrawerBody className="pt-16" dir="rtl">
+              {/* <DrawerBody className="pt-16" dir="rtl">
                 <div className="flex flex-col gap-2 w-full justify-center items-center pt-4">
                   <Image
                     isBlurred
@@ -327,7 +330,7 @@ export default function EventCard({
                 >
                   گزارش
                 </Link>
-              </DrawerFooter>
+              </DrawerFooter> */}
             </>
           )}
         </DrawerContent>

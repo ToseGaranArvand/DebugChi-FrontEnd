@@ -15,6 +15,7 @@ interface BidModalProps {
   modalTop: number;
   inputVal: number;
   setInputVal: React.Dispatch<React.SetStateAction<number>>;
+  submitBid: () => void;
 }
 
 const suggestedAmounts = [450000, 450000];
@@ -26,6 +27,7 @@ const BidModal: React.FC<BidModalProps> = ({
   modalTop,
   inputVal,
   setInputVal,
+  submitBid,
 }) => {
   return (
     <CustomModal
@@ -52,12 +54,15 @@ const BidModal: React.FC<BidModalProps> = ({
             isModalAbove ? "[transform:rotateX(180deg)]" : ""
           }`}
           width={430}
-           height={280}
+          height={280}
         />
         <div className="h-[92px] px-4 py-1 bg-[#151515] border border-[#6E6E6E1F] rounded-2xl text-white">
           <h1 className="text-right text-sm">قیمت</h1>
           <div className="w-full h-[35px] mt-2.5 flex gap-1.5">
-            <Button className="w-[95px] h-full !bg-[#4A9909] rounded-xl">
+            <Button
+              onPress={() => submitBid()}
+              className="w-[95px] h-full !bg-[#4A9909] rounded-xl"
+            >
               تایید
             </Button>
             <Input

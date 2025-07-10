@@ -61,7 +61,7 @@ const Bid = ({ data }: Props) => {
         {filteredResults && filteredResults.length > 0 ? (
           filteredResults.map((result, index) => (
             // <Card key={index} tender={result.tender} bids={result.bids} />
-            <MozayedeContainer/>
+            <MozayedeContainer  tender={result.tender}/>
           ))
         ) : (
           <div className="flex items-center justify-center w-full h-full text-center text-gray-500">

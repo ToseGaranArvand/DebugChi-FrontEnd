@@ -1,24 +1,31 @@
 "use client";
 // base
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 // components
 import { MozayedeCard } from "./Components/MozayedeCard/MozayedeCard";
 import { MozayedeHeader } from "./Components/MozayedeHeader/MozayedeHeader";
 // core
 import { GradientDivider } from "./Components/GradientDivider/GradientDivider";
 import { auctionData } from "@/data/db";
-
-const MozayedeContainer = () => {
+import { Tender } from "@/components/types/tender.type";
+type Props = {
+  tender: Tender;
+};
+const MozayedeContainer: FC<Props> = ({ tender }) => {
   return (
     <div
       dir="rtl"
-      className="min-h-screen text-white py-[80px] bg-gradient-to-b from-black to-[#000026]"
+      className="min-h-screen text-white lg:py-0 py-[80px] lg:bg-none bg-gradient-to-b from-black to-[#000026]"
     >
-      <MozayedeHeader />
-      {auctionData.map((item) => (
-        <div key={item.id}>
-          <MozayedeCard auctionData={item} />
-          <GradientDivider />
+      <div className="lg:hidden">
+        <MozayedeHeader />
+      </div>
+      {auctionData.map((item, index) => (
+        <div key={index}>
+          <MozayedeCard auctionData={item} tender={tender} />
+          <div className="lg:hidden">
+            <GradientDivider />
+          </div>
         </div>
       ))}
     </div>

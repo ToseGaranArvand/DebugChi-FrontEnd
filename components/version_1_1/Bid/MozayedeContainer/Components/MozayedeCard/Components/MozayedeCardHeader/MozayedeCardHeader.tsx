@@ -22,12 +22,12 @@ const MozayedeCardHeader: FC<IMozayedeCardHeaderProps> = ({
   time,
 }) => {
   return (
-    <div className="flex items-start justify-between p-4 sm:pb-[19px] pb-[5px]">
-      <div className="sm:mt-1 flex items-center gap-2">
+    <div className="flex items-start justify-between p-4 lg:pb-[19px] pb-[5px]">
+      <div className="lg:mt-1 flex items-center gap-2">
         <Image
           src={profile}
           alt="profile"
-          className="sm:w-[27px] w-[39px] sm:h-[26px] h-[38px] border border-white rounded-full object-cover"
+          className="lg:w-[27px] w-[39px] lg:h-[26px] h-[38px] border border-white rounded-full object-cover"
           width={40}
           height={40}
         />
@@ -43,18 +43,18 @@ const MozayedeCardHeader: FC<IMozayedeCardHeaderProps> = ({
         ].map(({ label, value, green }) => (
           <div key={label} className="flex flex-col items-center gap-[3px]">
             <div
-              className={`sm:w-7 w-[41px] sm:h-7 h-[41px] sm:pb-0 sm:pt-0.5 pb-0.5 flex justify-center items-center rounded-full border border-[#BABABA] text-[15px] ${
+              className={`lg:w-7 w-[41px] lg:h-7 h-[41px] lg:pb-0 lg:pt-0.5 pb-0.5 flex justify-center items-center rounded-full border border-[#BABABA] text-[15px] ${
                 green ? "text-[#0EE520]" : ""
               }`}
             >
               {value}
             </div>
-            <span className="sm:hidden text-[8px] font-iranBold">{label}</span>
+            <span className="lg:hidden text-[8px] font-iranBold">{label}</span>
           </div>
         ))}
       </div>
 
-      <Button className="sm:hidden pt-3 px-0 !bg-transparent">
+      <Button className="lg:hidden pt-3 px-0 !bg-transparent">
         <Image
           src="/images/svg/MoreSvg.svg"
           alt=""

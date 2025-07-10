@@ -80,8 +80,8 @@ export function SettingsDialog() {
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {data.nav.map((item) => (
-                      <SidebarMenuItem key={item.name}>
+                    {data.nav.map((item,index) => (
+                      <SidebarMenuItem key={index}>
                         <SidebarMenuButton
                           asChild
                           isActive={item.name === "Messages & media"}

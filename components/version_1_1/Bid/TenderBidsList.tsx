@@ -40,11 +40,11 @@ const TenderBidsList = ({ title, bids }: { title: string; bids: Bid[] }) => {
             </Button>
           </DrawerHeader>
           <DrawerBody>
-            {bids.map((bid) => {
+            {bids.map((bid, index) => {
               return (
                 <div
                   className="w-full rounded-xl bg-default-100 h-auto flex items-center gap-2 my-2 p-2 box-border"
-                  key={bid.id}
+                  key={index}
                 >
                   <div className="flex-1 flex gap-2 items-center">
                     <User

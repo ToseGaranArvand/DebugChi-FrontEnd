@@ -4,8 +4,7 @@ import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@heroui/react"
-import { perform_post, perform_chat_post } from "@/lib/api"
-
+import { perform_post } from "@/lib/api"
 
 interface Message {
   id: number
@@ -33,185 +32,294 @@ type Props = {
   question: Main[]
 }
 
-export default function AiQuestion({ question }: Props) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<Main | null>(null);
-  const [showChat, setShowChat] = useState(false);
-  const [isSending, setIsSending] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState<Array<{ role: string; content: string }>>([]);
-  const [isQuestionPhase, setIsQuestionPhase] = useState(true);
-  const [requestInfo, setRequestInfo] = useState<any>(null);
-  const [requestType, setRequestType] = useState<string>('');
-  
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+type RequestType = 'debug' | 'consultation' | 'private_class' | 'public_class' | '';
 
-  const [sessionId, setSessionId] = useState<string | null>(null);
+export default function AiQuestion({ question }: Props) {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [inputValue, setInputValue] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<Main | null>(null)
+  const [showChat, setShowChat] = useState(false)
+  const [isSending, setIsSending] = useState(false)
+  const [conversationHistory, setConversationHistory] = useState<Array<{ role: string; content: string }>>([])
+  const [isQuestionPhase, setIsQuestionPhase] = useState(true)
+  const [requestInfo, setRequestInfo] = useState<any>(null)
+  const [requestType, setRequestType] = useState<RequestType>('')
+  
+  const [isConfirming, setIsConfirming] = useState(false)
+  const [confirmationResult, setConfirmationResult] = useState<any>(null)
+  const [showModal, setShowModal] = useState(false)
+  
+  const requestTypeRef = useRef<RequestType>('');
+  
+
+  const [extraServices, setExtraServices] = useState<string[]>([])
+  const [showExtraServices, setShowExtraServices] = useState(false)
+  
+  useEffect(() => {
+    requestTypeRef.current = requestType;
+  }, [requestType]);
+
+  const [chatId, setChatId] = useState<number | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const adjustTextareaHeight = useCallback(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    adjustTextareaHeight();
-  }, [inputValue, adjustTextareaHeight]);
+    adjustTextareaHeight()
+  }, [inputValue, adjustTextareaHeight])
 
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ 
         behavior: "smooth", 
         block: "end" 
-      });
+      })
     }
-  }, [messages]);
+  }, [messages])
 
   useEffect(() => {
     const updateChatHeight = () => {
       if (chatContainerRef.current) {
-        const header = document.querySelector('header');
-        const inputContainer = document.querySelector('.input-container');
+        const header = document.querySelector('header')
+        const inputContainer = document.querySelector('.input-container')
         
-        const headerHeight = header?.clientHeight || 0;
-        const inputHeight = inputContainer?.clientHeight || 0;
+        const headerHeight = header?.clientHeight || 0
+        const inputHeight = inputContainer?.clientHeight || 0
         
-        const windowHeight = window.innerHeight;
-        const chatHeight = windowHeight - headerHeight - inputHeight - 32;
+        const windowHeight = window.innerHeight
+        const chatHeight = windowHeight - headerHeight - inputHeight - 32
         
-        chatContainerRef.current.style.height = `${chatHeight}px`;
+        chatContainerRef.current.style.height = `${chatHeight}px`
       }
     };
 
-    updateChatHeight();
-    window.addEventListener('resize', updateChatHeight);
+    updateChatHeight()
+    window.addEventListener('resize', updateChatHeight)
     
     return () => {
-      window.removeEventListener('resize', updateChatHeight);
+      window.removeEventListener('resize', updateChatHeight)
       if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
+        clearTimeout(typingTimeoutRef.current)
       }
-    };
-  }, [showChat]);
+    }
+  }, [showChat])
 
   useEffect(() => {
     messages.forEach((message, index) => {
       if (message.isAI && message.displayText.length < message.text.length && !message.isTyping) {
         setMessages(prev => {
-          const newMessages = [...prev];
-          newMessages[index] = { ...message, isTyping: true };
-          return newMessages;
-        });
+          const newMessages = [...prev]
+          newMessages[index] = { ...message, isTyping: true }
+          return newMessages
+        })
 
-        const fullText = message.text;
-        let currentIndex = 0;
+        const fullText = message.text
+        let currentIndex = 0
         
         const typeNextChar = () => {
           if (currentIndex < fullText.length) {
             setMessages(prev => {
-              const newMessages = [...prev];
+              const newMessages = [...prev]
               newMessages[index] = {
                 ...newMessages[index],
                 displayText: fullText.substring(0, currentIndex + 1)
-              };
-              return newMessages;
-            });
-            currentIndex++;
-            typingTimeoutRef.current = setTimeout(typeNextChar, 20);
+              }
+              return newMessages
+            })
+            currentIndex++
+            typingTimeoutRef.current = setTimeout(typeNextChar, 20)
           } else {
             setMessages(prev => {
-              const newMessages = [...prev];
-              newMessages[index] = { ...newMessages[index], isTyping: false };
-              return newMessages;
-            });
+              const newMessages = [...prev]
+              newMessages[index] = { ...newMessages[index], isTyping: false }
+              return newMessages
+            })
           }
         };
 
-        typingTimeoutRef.current = setTimeout(typeNextChar, 100);
+        typingTimeoutRef.current = setTimeout(typeNextChar, 100)
       }
-    });
-  }, [messages]);
+    })
+  }, [messages])
 
   useEffect(() => {
     if (showChat) {
-      const welcomeMessage = `سلام! من اینجا هستم تا در زمینه ${selectedCategory?.category_name} به شما کمک کنم. چطور می‌تونم کمکتون کنم؟`;
+      setChatId(null);
+      setConfirmationResult(null);
+      setShowModal(false);
+      setExtraServices([]);
+      setShowExtraServices(false);
+      
+      const welcomeMessage = `سلام! من اینجا هستم تا در زمینه ${selectedCategory?.category_name} به شما کمک کنم. چطور می‌تونم کمکتون کنم؟`
       
       const initialAIMessage: Message = {
         id: 1,
         text: welcomeMessage,
         displayText: welcomeMessage,
         isAI: true,
-      };
+      }
 
-      setMessages([initialAIMessage]);
-      setConversationHistory([{ role: "assistant", content: welcomeMessage }]);
-      setIsQuestionPhase(true);
-      setRequestInfo(null);
+      setMessages([initialAIMessage])
+      setConversationHistory([{ role: "assistant", content: welcomeMessage }])
+      setIsQuestionPhase(true)
+      setRequestInfo(null)
     }
-  }, [showChat]);
+  }, [showChat, selectedCategory])
 
   const handleSelectCategory = (item: Main) => {
-    setSelectedCategory(item);
+    setSelectedCategory(item)
     
-    if (item.category_name === 'رفع اشکال') {
-      setRequestType('debug');
-    } else if (item.category_name === 'مشاوره') {
-      setRequestType('consultation');
-    } else if (item.category_name === 'کلاس خصوصی') {
-      setRequestType('private_class');
+    let newRequestType: RequestType = '';
+    
+    if (item.category_name.includes('رفع اشکال') || item.category_name.includes('دیباگ')) {
+      newRequestType = 'debug';
+    } else if (item.category_name.includes('مشاوره')) {
+      newRequestType = 'consultation';
+    } else if (item.category_name.includes('خصوصی')) {
+      newRequestType = 'private_class';
+    } else if (item.category_name.includes('عمومی')) {
+      newRequestType = 'public_class';
+    }
+    
+    setRequestType(newRequestType);
+    requestTypeRef.current = newRequestType;
+    console.log(`Selected category: ${item.category_name}, requestType: ${newRequestType}`);
+  }
+
+
+  const handleConfirmRequest = async () => {
+    if (!requestInfo?.id) {
+      console.error("No request ID to confirm");
+      return;
+    }
+
+    setIsConfirming(true);
+    
+    try {
+      const payload: any = {
+        request_id: requestInfo.id
+      };
+
+ 
+      if (extraServices.length > 0) {
+        payload.extra_services = extraServices;
+      }
+
+      console.log("Confirming request with payload:", payload);
+      
+      const response = await perform_post('ai/request/confirm/', payload);
+      
+      console.log("Confirmation response:", response);
+      setConfirmationResult(response);
+      
+    
+      const confirmationMessage: Message = {
+        id: messages.length + 1,
+        text: "درخواست شما با موفقیت تأیید شد! در انتظار پذیرش یک متخصص...",
+        displayText: "درخواست شما با موفقیت تأیید شد! در انتظار پذیرش یک متخصص...",
+        isAI: true,
+      };
+
+      setMessages(prev => [...prev, confirmationMessage]);
+      
+    } catch (error: any) {
+      console.error("Confirmation Error:", error);
+      
+      let errorMessage = "خطا در تأیید درخواست";
+      if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      }
+      
+      setConfirmationResult({ error: errorMessage });
+      
+    
+      const errorMessageObj: Message = {
+        id: messages.length + 1,
+        text: errorMessage,
+        displayText: errorMessage,
+        isAI: true,
+      };
+      
+      setMessages(prev => [...prev, errorMessageObj]);
+    } finally {
+      setIsConfirming(false);
     }
   };
 
   const handleSendMessage = async () => {
     if (inputValue.trim() && !isSending && isQuestionPhase) {
-      setIsSending(true);
+      setIsSending(true)
 
       const userMessage: Message = {
         id: messages.length + 1,
         text: inputValue,
         displayText: inputValue,
         isAI: false,
-      };
+      }
 
-      const updatedMessages = [...messages, userMessage];
-      setMessages(updatedMessages);
-      setInputValue("");
+      const updatedMessages = [...messages, userMessage]
+      setMessages(updatedMessages)
+      setInputValue("")
 
-      const updatedHistory = [...conversationHistory, { role: "user", content: inputValue }];
-      setConversationHistory(updatedHistory);
+      const updatedHistory = [...conversationHistory, { role: "user", content: inputValue }]
+      setConversationHistory(updatedHistory)
 
       try {
-        const response = await perform_chat_post('ai/chat/deepseek/', {
+        const payload: any = {
           message: inputValue,
-          request_type: "debug"
-        }
-      );
-
-        const aiMessage: Message = {
-          id: updatedMessages.length + 1,
-          text: response.response,
-          displayText: "",
-          isAI: true,
+          request_type: requestTypeRef.current,
         };
-
-        setMessages([...updatedMessages, aiMessage]);
-        setConversationHistory([...updatedHistory, { role: "assistant", content: response.response }]);
         
-        setIsQuestionPhase(response.is_question_phase);
-
-        if (!response.is_question_phase) {
-          setRequestInfo(response.request_info);
+        console.log("Sending payload:", payload);
+        
+        if (chatId !== null) {
+          payload.chat_id = chatId;
         }
+
+        const response = await perform_post('ai/chat/deepseek/', payload);
+        
+        console.log("API Response:", response);
+        if (response.request_info) {
+          console.log("Request Info:", response.request_info);
+        }
+
+        if (response.chat_id && chatId === null) {
+          setChatId(response.chat_id);
+        }
+
+        // تغییر اصلی: فقط اگر هنوز در فاز سوالات هستیم پیام AI را نمایش می‌دهیم
+        if (response.is_question_phase) {
+          const aiMessage: Message = {
+            id: updatedMessages.length + 1,
+            text: response.response,
+            displayText: "",
+            isAI: true,
+          };
+
+          setMessages([...updatedMessages, aiMessage])
+          setConversationHistory([...updatedHistory, { role: "assistant", content: response.response }])
+        } else {
+          // اگر از فاز سوالات خارج شدیم، اطلاعات درخواست را ذخیره و مودال را نمایش می‌دهیم
+          setRequestInfo(response.request_info)
+          setShowModal(true)
+        }
+        
+        setIsQuestionPhase(response.is_question_phase)
       } catch (error: any) {
-        console.error("API Error:", error);
-        let errorMessage = "خطا در ارتباط با سرور";
+        console.error("API Error:", error)
+        let errorMessage = "خطا در ارتباط با سرور"
         
         if (error.response?.data?.detail) {
-          errorMessage = error.response.data.detail;
+          errorMessage = error.response.data.detail
         }
 
         const errorMessageObj: Message = {
@@ -219,22 +327,41 @@ export default function AiQuestion({ question }: Props) {
           text: errorMessage,
           displayText: errorMessage,
           isAI: true,
-        };
+        }
         
-        setMessages([...updatedMessages, errorMessageObj]);
-        setConversationHistory([...updatedHistory, { role: "assistant", content: errorMessage }]);
+        setMessages([...updatedMessages, errorMessageObj])
+        setConversationHistory([...updatedHistory, { role: "assistant", content: errorMessage }])
       } finally {
-        setIsSending(false);
+        setIsSending(false)
       }
     }
-  };
+  }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey && !isSending) {
-      e.preventDefault();
-      handleSendMessage();
+      e.preventDefault()
+      handleSendMessage()
+    }
+  }
+
+ 
+  const toggleExtraService = (service: string) => {
+    if (extraServices.includes(service)) {
+      setExtraServices(extraServices.filter(s => s !== service));
+    } else {
+      setExtraServices([...extraServices, service]);
     }
   };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setShowExtraServices(false);
+  };
+
+  const handleReserveRequest = () => {
+    console.log("Reserve request clicked");
+  };
+
 
   const StarIcon = () => (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -281,6 +408,214 @@ export default function AiQuestion({ question }: Props) {
       <circle cx="20" cy="20" r="19.5" stroke="#6E6E6E" />
     </svg>
   );
+
+
+  const DiscountIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M16 2L2 16M6 3.5C6 4.88071 4.88071 6 3.5 6C2.11929 6 1 4.88071 1 3.5C1 2.11929 2.11929 1 3.5 1C4.88071 1 6 2.11929 6 3.5ZM17 14.5C17 15.8807 15.8807 17 14.5 17C13.1193 17 12 15.8807 12 14.5C12 13.1193 13.1193 12 14.5 12C15.8807 12 17 13.1193 17 14.5Z"
+        stroke="#BABABA"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+
+  const ScanFaceIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M2 6.44444V4.22222C2 3.63285 2.23413 3.06762 2.65087 2.65087C3.06762 2.23413 3.63285 2 4.22222 2H6.44444M17.5556 2H19.7778C20.3671 2 20.9324 2.23413 21.3491 2.65087C21.7659 3.06762 22 3.63285 22 4.22222V6.44444M22 17.5556V19.7778C22 20.3671 21.7659 20.9324 21.3491 21.3491C21.9324 21.7659 20.3671 22 19.7778 22H17.5556M6.44444 22H4.22222C3.63285 22 3.06762 21.7659 2.65087 21.3491C2.23413 20.9324 2 20.3671 2 19.7778V17.5556M7.55556 14.2222C7.55556 14.2222 9.22222 16.4444 12 16.4444C14.7778 16.4444 16.4444 14.2222 16.4444 14.2222M8.66667 8.66667H8.67778M15.3333 8.66667H15.3344"
+        stroke="#BABABA"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+
+  const ServiceDeliveryIcon = () => (
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M11 11H11.01M15 5V3C15 2.46957 14.7893 1.96086 14.4142 1.58579C14.0391 1.21071 13.5304 1 13 1H9C8.46957 1 7.96086 1.21071 7.58579 1.58579C7.21071 1.96086 7 2.46957 7 3V5M21 12C18.0328 13.959 14.5555 15.0033 11 15.0033C7.44445 15.0033 3.96721 13.959 1 12M3 5H19C20.1046 5 21 5.89543 21 7V17C21 18.1046 20.1046 19 19 19H3C1.89543 19 1 18.1046 1 17V7C1 5.89543 1.89543 5 3 5Z"
+        stroke="#BABABA"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+
+ 
+  const ConsultationModal = () => {
+    if (!showModal) return null;
+    
+
+    const basePrice = requestInfo?.price || 0;
+    const extraCharge = basePrice * 0.3 * extraServices.length;
+    const totalPrice = basePrice + extraCharge;
+    
+    return (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ease-out"
+        style={{
+          background: "#0F0F0F8A",
+          backdropFilter: "blur(35px)",
+        }}
+        onClick={handleCloseModal}
+      >
+    
+        <div
+          className="relative w-full transition-all duration-300 ease-out"
+          style={{
+            width: "90%",
+            maxWidth: "600px",
+            background: "linear-gradient(180deg, rgba(186, 186, 186, 0.32) 19.72%, rgba(48, 48, 48, 0) 100%)",
+            borderRadius: "16px",
+            padding: "1px",
+            transform: "scale(1) translateY(0)",
+            opacity: 1,
+          }}
+          onClick={(e) => e.stopPropagation()}
+          dir="rtl"
+        >
+
+          <div
+            className="relative p-6 w-full"
+            style={{
+              minHeight: "300px",
+              background: "#181818",
+              borderRadius: "15px",
+            }}
+          >
+   
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <span className="text-lg" style={{ color: "#0EE520" }}>
+                  {selectedCategory?.category_name}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                 <span className="text-lg font-semibold" style={{ color: "#0EE520" }}>
+                  {totalPrice.toLocaleString()}
+                </span>
+                <span className="text-lg" style={{ color: "#BABABA" }}>
+                  تومان
+                </span>
+                  </div>
+            </div>
+
+          
+            <div
+              className="w-full mb-8"
+              style={{
+                height: "1px",
+                border: "0.5px solid",
+                borderImage:
+                  "linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.27) 53.37%, rgba(255, 255, 255, 0) 100%) 1",
+              }}
+            />
+
+           
+            <div className="flex justify-center items-center gap-16 mb-8">
+            
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center justify-center">
+                  <ServiceDeliveryIcon />
+                </div>
+                <span className="text-white text-sm text-center">نوع دریافت خدمات</span>
+              </div>
+
+          
+              <div 
+                className="flex flex-col items-center gap-3 cursor-pointer"
+                onClick={() => setShowExtraServices(!showExtraServices)}
+              >
+                <div className="flex items-center justify-center">
+                  <ScanFaceIcon />
+                </div>
+                <span className="text-white text-sm text-center">ست کردن خدمات</span>
+              </div>
+
+            
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center justify-center">
+                  <DiscountIcon />
+                </div>
+                <span className="text-white text-sm text-center">کد تخفیف</span>
+              </div>
+            </div>
+
+        
+            {showExtraServices && (
+              <div className="mb-8">
+                <h3 className="text-white text-center mb-4">خدمات اضافه</h3>
+                <div className="flex justify-center gap-6">
+                  <label className="flex items-center gap-2 text-white">
+                    <input
+                      type="checkbox"
+                      checked={extraServices.includes('consultation')}
+                      onChange={() => toggleExtraService('consultation')}
+                      disabled={isConfirming || confirmationResult}
+                      className="form-checkbox rounded h-5 w-5 text-blue-600"
+                    />
+                    مشاوره
+                  </label>
+                  <label className="flex items-center gap-2 text-white">
+                    <input
+                      type="checkbox"
+                      checked={extraServices.includes('debug')}
+                      onChange={() => toggleExtraService('debug')}
+                      disabled={isConfirming || confirmationResult}
+                      className="form-checkbox rounded h-5 w-5 text-blue-600"
+                    />
+                    دیباگ
+                  </label>
+                  <label className="flex items-center gap-2 text-white">
+                    <input
+                      type="checkbox"
+                      checked={extraServices.includes('private_class')}
+                      onChange={() => toggleExtraService('private_class')}
+                      disabled={isConfirming || confirmationResult}
+                      className="form-checkbox rounded h-5 w-5 text-blue-600"
+                    />
+                    کلاس خصوصی
+                  </label>
+                </div>
+              </div>
+            )}
+
+       
+            <div className="flex gap-4 w-full">
+              <button
+                className="flex-1 py-3 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center"
+                onClick={handleConfirmRequest}
+                disabled={isConfirming || confirmationResult}
+              >
+                {isConfirming ? (
+                  <>
+                    <span className="mr-2">در حال تأیید...</span>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  </>
+                ) : confirmationResult ? (
+                  "در انتظار پذیرش یک متخصص"
+                ) : (
+                  "تایید درخواست"
+                )}
+              </button>
+
+              <button
+                className="flex-1 py-3 rounded-lg text-white font-medium border border-gray-500 hover:bg-gray-700 transition-colors"
+                onClick={handleReserveRequest}
+              >
+                رزرو درخواست
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   if (!selectedCategory) {
     return (
@@ -409,32 +744,6 @@ export default function AiQuestion({ question }: Props) {
         >
           <div className="space-y-6 max-w-3xl mx-auto">
             {messages.map((message) => {
-              if (!isQuestionPhase && message.id === messages.length && message.isAI) {
-                return (
-                  <div key={message.id}>
-                    <div className={`flex justify-start`}>
-                      <div className={`relative p-4 bg-transparent max-w-[90%]`}>
-                        <p className="text-sm leading-relaxed" style={{ color: "#BABABA" }}>
-                          {message.displayText}
-                        </p>
-                        <div className="absolute top-4 -right-1">
-                          <StarIcon />
-                        </div>
-                      </div>
-                    </div>
-
-                    {requestInfo && (
-                      <div className="mt-4 p-4 bg-gray-800 rounded-lg">
-                        <h3 className="font-bold mb-2">مشخصات درخواست:</h3>
-                        <pre className="text-sm whitespace-pre-wrap">
-                          {JSON.stringify(requestInfo, null, 2)}
-                        </pre>
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-
               return (
                 <div key={message.id} className={`flex ${message.isAI ? "justify-start" : "justify-end"}`}>
                   <div
@@ -516,6 +825,9 @@ export default function AiQuestion({ question }: Props) {
           </div>
         </div>
       </div>
+      
+   
+      <ConsultationModal />
     </div>
   );
 }

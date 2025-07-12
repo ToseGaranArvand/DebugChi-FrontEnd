@@ -34,8 +34,6 @@ export default function Login() {
   const { login } = useAppSelector((state: RootState) => state.gloabal)
   const path = usePathname()
 
-  // const query = useSearchParams();
-  // const [selected, setSelected] = useState<string>("specialist")
   const [formData, setFormData] = useState({ username: "", password: "" })
   const [error, setError] = useState({
     username: "",
@@ -55,14 +53,12 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const data = Object.fromEntries(new FormData(e.currentTarget))
-    // console.log(selected, data)
     e.preventDefault()
     setIsLoading(true)
 
     Cookies.remove("token")
-     const token = Cookies.get('token');
-    const response = await perform_post("auths/login/", { ...data}
-    );
+    const token = Cookies.get('token');
+    const response = await perform_post("auths/login/", { ...data});
 
     console.log(response)
     if (response.success && response.user) {
@@ -93,10 +89,12 @@ export default function Login() {
       }}
       onOpenChange={onOpenChange}
     >
-      <DrawerContent className="relative overflow-hidden">
+      <DrawerContent className="relative overflow-hidden" style={{ background: 'rgba(0, 0, 0, .99)' }}>
         {(onClose) => (
           <>
             <BackgroundGlobalGradient />
+            
+            {/* Close button */}
             <Button
               endContent={<ArrowLeft size={28} />}
               variant="light"
@@ -106,127 +104,126 @@ export default function Login() {
                 dispatch(showLogin({ show: false, path: "" }))
                 onClose()
               }}
-              className="absolute left-4 top-2"
-            ></Button>
-            <DrawerBody className="h-screen">
-              <div className="flex flex-col items-center justify-center h-full w-full ">
-                <Card className="min-w-[500px] max-w-[600px] h-3/4 border border-default-100 bg-bg_card">
+              className="absolute left-4 top-2 z-50"
+            />
+            
+            {/* Main content */}
+            <DrawerBody className="h-screen relative z-10">
+              <div className="flex flex-col items-center justify-center h-full w-full">
+                <Card className="min-w-[500px] max-w-[600px] h-3/4 border border-default-100 bg-bg_card relative z-20">
                   <CardBody className="overflow-hidden">
-                  
-                      <motion.div className="rounded-2xl w-full h-full flex items-center justify-center">
-                          <Form
-                            className="w-full flex flex-col min-h-[500px] items-center justify-center  px-5 rounded-lg"
-                            onSubmit={handleSubmit}
+                    <motion.div className="rounded-2xl w-full h-full flex items-center justify-center">
+                      <Form
+                        className="w-full flex flex-col min-h-[500px] items-center justify-center px-5 rounded-lg"
+                        onSubmit={handleSubmit}
+                      >
+                        <Input
+                          startContent={<UserCircle color="gray" />}
+                          isRequired
+                          errorMessage={"اطلاعات وارد شده صحیح نمی باشد"}
+                          label="نام کاربری"
+                          labelPlacement="outside"
+                          name="username"
+                          size="lg"
+                          placeholder="نام کاربری ، ایمیل یا شماره تلفن"
+                          type="text"
+                          variant="faded"
+                          autoComplete="username"
+                        />
+
+                        <div className="relative w-full">
+                          <Input
+                            startContent={<Lock color="gray" />}
+                            isRequired
+                            label="کلمه عبور"
+                            labelPlacement="outside"
+                            placeholder="کلمه عبور را وارد نمایید"
+                            name="password"
+                            size="lg"
+                            type={showPasswordCustomer ? "text" : "password"}
+                            autoComplete="current-password"
+                            validate={(value) => {
+                              if (value.length < 8) {
+                                return "حداقل 8 کاراکتر باید وارد کنید"
+                              }
+                            }}
+                          />
+
+                          <button
+                            type="button"
+                            onClick={() => setShowPasswordCustomer(!showPasswordCustomer)}
+                            className="absolute left-3 top-[38px] focus:outline-none"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                              zIndex: 10,
+                              top: "2.5rem", 
+                              left: "1rem",
+                            }}
+                            aria-label={showPasswordCustomer ? "پنهان کردن رمز عبور" : "نمایش رمز عبور"}
                           >
-                            <Input
-                              startContent={<UserCircle color="gray" />}
-                              isRequired
-                              errorMessage={"اطلاعات وارد شده صحیح نمی باشد"}
-                              label="نام کاربری"
-                              labelPlacement="outside"
-                              name="username"
-                              size="lg"
-                              placeholder="نام کاربری ، ایمیل یا شماره تلفن"
-                              type="text"
-                              variant="faded"
-                              autoComplete="username"
-                            />
+                            {showPasswordCustomer ? (
+                              <EyeOff size={20} className="text-gray-400" />
+                            ) : (
+                              <Eye size={20} className="text-gray-400" />
+                            )}
+                          </button>
+                        </div>
 
-                           
-                            <div className="relative w-full">
-                              <Input
-                                startContent={<Lock color="gray" />}
-                                isRequired
-                                label="کلمه عبور"
-                                labelPlacement="outside"
-                                placeholder="کلمه عبور را وارد نمایید"
-                                name="password"
-                                size="lg"
-                                type={showPasswordCustomer ? "text" : "password"}
-                                autoComplete="current-password"
-                                validate={(value) => {
-                                  if (value.length < 8) {
-                                    return "حداقل 8 کاراکتر باید وارد کنید"
-                                  }
-                                }}
-                              />
+                        <div className="w-full flex items-center justify-start my-2">
+                          <Button
+                            as={Link}
+                            variant="light"
+                            href={"/auth/forget-password/"}
+                            className="text-tiny text-blue-500 underline"
+                            onPress={() => {
+                              dispatch(showLogin({ show: false, path: "" }))
+                              onClose()
+                            }}
+                          >
+                            بازیابی کلمه عبور؟
+                          </Button>
+                        </div>
 
-                             
-                              <button
-                                type="button"
-                                onClick={() => setShowPasswordCustomer(!showPasswordCustomer)}
-                                className="absolute left-3 top-[38px] focus:outline-none"
-                               style={{
-                                        background: "transparent",
-                                        border: "none",
-                                        cursor: "pointer",
-                                        zIndex: 10,
-                                        top: "2.5rem", 
-                                        left: "1rem",
-                                      }}
-                                aria-label={showPasswordCustomer ? "پنهان کردن رمز عبور" : "نمایش رمز عبور"}
-                              >
-                                {showPasswordCustomer ? (
-                                  <EyeOff size={20} className="text-gray-400" />
-                                ) : (
-                                  <Eye size={20} className="text-gray-400" />
-                                )}
-                              </button>
-                            </div>
+                        <div className="flex flex-col gap-2 w-full">
+                          <br />
+                          <Button
+                            isLoading={isLoading}
+                            variant="solid"
+                            className="bg-btn_primary"
+                            type="submit"
+                            size="lg"
+                          >
+                            ورود
+                          </Button>
 
-                            <div className="w-full flex items-center justify-start my-2">
-                              <Button
-                                as={Link}
-                                variant="light"
-                                href={"/auth/forget-password/"}
-                                className="text-tiny text-blue-500 underline"
-                                onPress={() => {
-                                  dispatch(showLogin({ show: false, path: "" }))
-                                  onClose()
-                                }}
-                              >
-                                بازیابی کلمه عبور؟
-                              </Button>
-                            </div>
+                          <div className="flex items-center justify-center w-full gap-4">
+                            <Divider className="w-1/4" />
+                            <span>یا</span>
+                            <Divider className="w-1/4" />
+                          </div>
 
-                            <div className="flex flex-col gap-2 w-full">
-                              <br />
-                              <Button
-                                isLoading={isLoading}
-                                variant="solid"
-                                className="bg-btn_primary"
-                                type="submit"
-                                size="lg"
-                              >
-                                ورود
-                              </Button>
-
-                              <div className="flex items-center justify-center w-full gap-4">
-                                <Divider className="w-1/4" />
-                                <span>یا</span>
-                                <Divider className="w-1/4" />
-                              </div>
-
-                              <Button
-                                as={HeroLink}
-                                isDisabled={isLoading}
-                                variant="faded"
-                                size="lg"
-                                onPress={() => {
-                                  onClose()
-                                  dispatch(showSignUp({ show: true, path: "" }))
-                                }}
-                              >
-                                ثبت نام
-                              </Button>
-                            </div>
-                            <div className="w-full">
-                              {error.server && (
-                                <Alert className="text-right" variant="flat" color="danger" title={error.server} />
-                              )}
-                            </div>
-                          </Form>
-                        </motion.div>
+                          <Button
+                            as={HeroLink}
+                            isDisabled={isLoading}
+                            variant="faded"
+                            size="lg"
+                            onPress={() => {
+                              onClose()
+                              dispatch(showSignUp({ show: true, path: "" }))
+                            }}
+                          >
+                            ثبت نام
+                          </Button>
+                        </div>
+                        <div className="w-full">
+                          {error.server && (
+                            <Alert className="text-right" variant="flat" color="danger" title={error.server} />
+                          )}
+                        </div>
+                      </Form>
+                    </motion.div>
                   </CardBody>
                 </Card>
               </div>

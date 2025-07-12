@@ -134,15 +134,12 @@ const SendCode = ({sender,reciever}:Props) => {
   };
   return (
     <>
-      <Button
-      className="bg-lime-300 text-black"
-        onPress={onOpen}
-        isIconOnly
-        startContent={<Code size={16} />}
-        variant="light"
-        size="md"
-        radius="full"
-      ></Button>
+<div 
+  className="bg-[#1C1C1CB2] text-white w-5 h-5 rounded-full flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+  onClick={onOpen}
+>
+  <Code size={10} />
+</div>
 
       <Drawer
       hideCloseButton   

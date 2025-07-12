@@ -1,26 +1,32 @@
-import { Main } from "@/components/types/tender.type";
+import { Main as TenderMain } from "@/components/types/tender.type";
 import Bid from "@/components/version_1_1/Bid";
 import BidFilter from "@/components/version_1_1/Bid/BidFilter";
 import BidIncomingList from "@/components/version_1_1/Bid/BidIncomingList";
-import Sidebar from "@/components/version_1_1/Sidebar";
-import SidebarBody from "@/components/version_1_1/Sidebar/SideBar";
-import SidebarFooter from "@/components/version_1_1/Sidebar/sidebar-footer";
 import BackgroundGlobalGradient from "@/components/version_1_1/ui/backgorund-gradiant-global";
 import { BidFilterProvider } from "@/context/BidFilterContext";
 import { TenderProvider } from "@/context/UploadTenderContext";
 import { perform_get } from "@/lib/api";
 import { cookies } from "next/headers";
-import React from "react";
+import AppSidebar from "@/components/version_1_1/AppSidebar";
 
 const page = async ({ params }: any) => {
   const token = (await cookies()).get("token")?.value;
-  const tender: Main = await perform_get("api/v1/bids_tender_list/", token);
+  const tender: TenderMain = await perform_get("api/v1/bids_tender_list/", token);
+  
+  // دریافت اطلاعات کاربر
+  let user = null;
+  if (token) {
+    try {
+      user = await perform_get("auths/user_info/", token);
+    } catch (error) {
+      console.error("Failed to fetch user info", error);
+    }
+  }
+
   return (
     <main className="w-full h-screen flex overflow-hidden">
-      <Sidebar>
-        <SidebarBody />
-        <SidebarFooter token={token} />
-      </Sidebar>
+      <AppSidebar token={token} user={user} />
+      
       <BidFilterProvider>
         <div className="flex-1 flex flex-col h-full box-border relative p-5 gap-4 overflow-hidden ">
           <BackgroundGlobalGradient />

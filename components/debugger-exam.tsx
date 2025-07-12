@@ -25,7 +25,7 @@ interface DebuggerExamProps {
 }
 
 export default function DebuggerExam({ token }: DebuggerExamProps) {
-  // State های اصلی آزمون
+ 
   const [examStarted, setExamStarted] = useState(false)
   const [examFinished, setExamFinished] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)

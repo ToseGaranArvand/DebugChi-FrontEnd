@@ -1,5 +1,11 @@
 // base
-import React, { FC, useState } from "react";
+import React, {
+  FC,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 // Components
 import { MozayedeCardHeader } from "./Components/MozayedeCardHeader/MozayedeCardHeader";
 import { MozayedeBanner } from "./Components/MozayedeBanner/MozayedeBanner";
@@ -9,35 +15,41 @@ import { MozayedeFooter } from "./Components/MozayedeFooter/MozayedeFooter";
 // core
 import { MozayedeFinishedBanner } from "./Components/MozayedeFinishedBanner/MozayedeFinishedBanner";
 import Image from "next/image";
-import { Tender } from "@/components/types/tender.type";
+import type { Bid, Tender } from "@/components/types/tender.type";
+import { comment_socket } from "@/config/socket-config";
 
-interface IauctionDataPropTypes {
-  id: number;
-  username: string;
-  profile: string;
-  time: {
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-  };
-  image: string;
-  title: string;
-  description: string;
-  bids: {
-    username: string;
-    amount: string;
-  }[];
-  likeCount: number;
-  commentCount: number;
-}
 type IMozayedeCardProps = {
-  auctionData: IauctionDataPropTypes;
   tender: Tender;
+  bids: Bid[];
 };
 
-const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData, tender }) => {
+const useCommentCount = (comment_id: string) => {
+  const [commentCount, setCommentCount] = useState(0);
+
+  useEffect(() => {
+    // درخواست گرفتن کامنت‌ها از سوکت
+    comment_socket.emit("get_comments", `${comment_id}`);
+
+    // پاسخ به رویداد سوکت
+    comment_socket.on(`${comment_id}`, (data) => {
+      if (data?.comments) {
+        setCommentCount(data.comments.length);
+      }
+    });
+
+    // پاک‌سازی هنگام unmount
+    return () => {
+      comment_socket.off(`${comment_id}`);
+    };
+  }, [comment_id]);
+
+  return commentCount;
+};
+
+const MozayedeCard: FC<IMozayedeCardProps> = ({ tender, bids }) => {
   const [isCoursedFinish, setIsCoursedFinish] = useState(false);
+  const commentCount = useCommentCount(tender.uuid);
+  
 
   return (
     <div className="w-full px-1 flex flex-col lg:items-end">
@@ -45,7 +57,8 @@ const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData, tender }) => {
         <div className="w-full flex items-center lg:bg-[#0F0F0F] bg-[#1C1C1CB2] lg:border-none border border-[#ffffff63] lg:rounded-2xl rounded-[20px]">
           <div className="lg:block hidden w-[343px] h-[280px] mr-2">
             <Image
-              src="/images/general/LabelSample3.png"
+              // بعدا اصلی رو بزار
+              src={"/images/general/LabelSample3.png"}
               alt=""
               width={343}
               height={280}
@@ -54,18 +67,15 @@ const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData, tender }) => {
           </div>
           <div className="lg:w-[calc(100%-343px)] flex-1">
             <MozayedeCardHeader
-              username={auctionData.username}
-              profile={auctionData.profile}
-              time={auctionData.time}
+              username={tender.created_by.username}
+              profile={tender.created_by.image_profile}
+              targetDate={tender.end_time}
             />
 
-            <MozayedeBanner image={auctionData.image} />
+            <MozayedeBanner image={tender.image} />
             <div className="px-3 pt-[11px] lg:pb-[1px] pb-[15px]">
               <MozayedeContent
-                id={auctionData.id}
-                title={auctionData.title}
-                description={auctionData.description}
-                bids={auctionData.bids}
+                bids={bids}
                 isCoursedFinish={isCoursedFinish}
                 tender={tender}
               />
@@ -73,7 +83,7 @@ const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData, tender }) => {
                 {isCoursedFinish ? (
                   <MozayedeFinishedBanner />
                 ) : (
-                  <BidList bids={auctionData.bids} />
+                  <BidList bids={bids} />
                 )}
               </div>
             </div>
@@ -82,8 +92,8 @@ const MozayedeCard: FC<IMozayedeCardProps> = ({ auctionData, tender }) => {
       </div>
 
       <MozayedeFooter
-        likeCount={auctionData.likeCount}
-        commentCount={auctionData.commentCount}
+        likeCount={tender.tender_like_count}
+        commentCount={commentCount}
       />
     </div>
   );

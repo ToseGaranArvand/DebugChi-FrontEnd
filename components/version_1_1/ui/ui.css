@@ -39,6 +39,19 @@
   box-shadow: 0 0 0 2.5px #80ff00 !important;
 }
 /* ------------- select option -------------------- */
-.ant-collapse-header{
+.ant-collapse-header {
   padding: 0 !important;
+}
+/* ------------- switch btn -------------------- */
+.ant-segmented-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white !important;
+}
+.ant-segmented-item-selected {
+  background: #252328 !important;
+}
+.ant-segmented-thumb {
+  background: #252328 !important;
 }

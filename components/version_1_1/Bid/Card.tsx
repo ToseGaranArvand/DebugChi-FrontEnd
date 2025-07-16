@@ -80,12 +80,14 @@ const Card = ({ tender, bids }: Props) => {
       dispatch(showLogin({ show: true, path: pathname }));
     } else if (action == "submit") {
       // Handle bid submission
-      const response = await perform_post("api/v1/submit_bid/", {
-        tender: tender_id,
-        amount: price.toString(),
-      },
-      token || ''
-    );
+      const response = await perform_post(
+        "api/v1/submit_bid/",
+        {
+          tender: tender_id,
+          amount: price.toString(),
+        },
+        token || ""
+      );
       if (response.success) {
         const newBid: Bid = {
           user: userData || "",
@@ -94,7 +96,7 @@ const Card = ({ tender, bids }: Props) => {
           created_at: new Date(),
           updated_at: new Date(),
           tender: 0,
-          status:false
+          status: false,
         };
         addToast({
           title: "درخواست شما ثبت شد",
@@ -151,7 +153,7 @@ const Card = ({ tender, bids }: Props) => {
         created_at: msg.created_at,
         updated_at: msg.updated_at,
         tender: 0,
-        status:false
+        status: false,
       };
       setBidsList((prevBids) => [...prevBids, newBid]);
     });
@@ -201,8 +203,7 @@ const Card = ({ tender, bids }: Props) => {
           </div>
           <div className="min-h-16 grid grid-cols-3 items-center gap-2 ">
             <div className="flex flex-col gap-2 ">
-              {tender.created_by.uuid === userData?.uuid ? null :
-              is_tender ? (
+              {tender.created_by.uuid === userData?.uuid ? null : is_tender ? (
                 <Popover
                   showArrow
                   offset={10}
@@ -298,12 +299,8 @@ const Card = ({ tender, bids }: Props) => {
                   value={value}
                   user_exist={user_exist}
                 />
-              )
-              }
+              )}
               {tender.project != null && <EventCard data={tender.project} />}
-
-              
-
             </div>
             <div></div>
             <div className="bg-black rounded-2xl h-full">
@@ -340,209 +337,18 @@ const Card = ({ tender, bids }: Props) => {
         </div>
       </div>
       <div className="w-full h-10  flex justify-end items-center mt-2">
-          <Action tender_uuid={tender.uuid} comment_id={tender.uuid} is_like={tender.tender_like} like_count={tender.tender_like_count} />
-
+        <Action
+          tender_uuid={tender.uuid}
+          comment_id={tender.uuid}
+          is_like={tender.tender_like}
+          like_count={tender.tender_like_count}
+        />
       </div>
     </div>
   );
 };
 
 export default Card;
-{
-  /* <div className="w-full h-20 bg-[#f5f5f5] dark:bg-[#242424] rounded-t-2xl flex items-center justify-between box-border px-4">
-  <User
-    name={`${tender.created_by.first_name} ${tender.created_by.last_name}`}
-    avatarProps={{
-      src: `${tender.created_by.image_profile}`,
-    }}
-  />
-  <TenderTimer time={tender.end_time} />
-
-  <div className="flex items-center gap-2">
-  
-    <Chip>{is_tender ? "مزایده" : "مناقصه"}</Chip>
-  </div>
-</div> */
-}
-{
-  /* <div className="flex-1 flex box-border px-5 bg-[#f5f5f5] dark:bg-[#242424] ">
-  <div className="w-96 flex flex-col bg-main_bg/40 rounded-l-2xl" dir="rtl">
-    <div className="flex-1 flex flex-col p-4">
-      <div className="mb-4">
-        <Chip variant="flat" color="success">
-          پیشنهاد دهندگان
-        </Chip>
-        <div className="max-h-[400px] overflow-y-auto">
-          {bidsList.length > 0 ? (
-            bidsList
-              .map((bid) => (
-                <div
-                  key={bid.id}
-                  className="flex justify-between flex-row-reverse items-center p-3 b my-2 hover:bg-foreground-100 rounded-lg transition-all duration-500 ease-in-out"
-                >
-                  <h3 className="text-foreground-300">
-                    {bid.user.username ||
-                      `${bid.user.first_name} ${bid.user.last_name}`}
-                  </h3>
-
-                  <Chip variant="flat" color="danger">
-                    {formatCurrency(Number(bid.amount))}
-                  </Chip>
-                </div>
-              ))
-              .reverse()
-          ) : (
-            <div className="text-center py-4 text-gray-500">
-              هنوز پیشنهادی ثبت نشده است
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-    <Divider className="w-3/4 mx-auto bg-c_background" />
-    <div className="h-20  border-stone-800 flex flex-col items-center justify-center gap-2 box-border px-20 w-full ">
-      <div className="flex  items-center justify-between gap-4 w-full">
-        {is_tender ? (
-          <>
-            <Chip variant="flat" color="success" dir="rtl">
-              {formatCurrency(Number(bid))}
-            </Chip>
-            <span>بالاترین قیمت</span>
-          </>
-        ) : (
-          <>
-            <Chip variant="flat" color="success" dir="rtl">
-              {formatCurrency(Number(bid))}
-            </Chip>
-            <span>ورودی</span>
-          </>
-        )}
-      </div>
-      <div className="border border-t-1 border-dashed border-stone-700 w-full"></div>
-    </div>
-  </div>
-
-  <Divider orientation="vertical" className="bg-c_background" />
-
-  <div className="flex-1 p-4 flex flex-col overflow-hidden bg-main_bg/40 rounded-r-2xl  ">
-    {tender.image && (
-      <div className="mb-4">
-        <img
-          src={`${tender.image}`}
-          alt={tender.title}
-          className="rounded-lg object-cover w-full h-[200px]"
-        />
-      </div>
-    )}
-
-    <div
-      className="flex flex-col gap-4 z-10  w-full mx-auto   box-border  flex-1 relative"
-      dir="rtl"
-    >
-      <h2 className="text-xl font-blackSans mb-4">{tender.title}</h2>
-
-      <div className="mt-4">
-        <div className=" rounded-lg">
-          <h2 className="font-lightSans leading-7">{tender.description}</h2>
-        </div>
-      </div>
-
-      <div className="mt-4 w-1/4">
-        {tender.project != null && <EventCard data={tender.project} />}
-      </div>
-    
-    </div>
-  </div>
-</div> */
-}
-
-{
-  /* <div className="w-full h-20 bg-[#f5f5f5] dark:bg-[#242424] rounded-b-2xl flex items-center justify-between box-border px-4 ">
-  {is_tender ? (
-    <Popover
-      showArrow
-      offset={10}
-      placement="bottom"
-      onOpenChange={(open) => setIsOpen(open)}
-      isOpen={isOpen}
-    >
-      <PopoverTrigger>
-        <Button
-          color="secondary"
-          size="sm"
-          className="bg-purple-700 "
-          startContent={<Coins />}
-          onPress={() => submitBid( user_exist ? "update" : "submit", tender.id, Number(value))}
-        >
-          {user_exist ? "بروزرسانی پیشنهاد" : "شرکت در مزایده"}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        {(titleProps) => (
-          <div className="px-1 py-2 w-full">
-            <p
-              className="text-small font-bold text-foreground"
-              {...titleProps}
-            ></p>
-            <div className="mt-2 flex flex-col gap-2 w-full">
-              <NumberInput
-                isRequired
-                color="success"
-                ref={value}
-                min={0}
-                label="قیمت"
-                errorMessage="قیمت را وارد نمایید"
-                placeholder="قیمت خود را وارد نمایید"
-                type="number"
-                defaultValue={Number(bid)}
-                endContent={
-                  <Button
-                    color="success"
-                    size="sm"
-                    onPress={() =>
-                      submitBid( user_exist ? "update" : "submit", tender.id, Number(value))
-                    }
-                  >
-                    تایید
-                  </Button>
-                }
-                size="lg"
-                variant="faded"
-              />
-              <Button
-                onPress={() =>
-                  submitBid( user_exist ? "update" : "submit", tender.id, Number(bid) * 1.2)
-                }
-              >
-                {formatCurrency(Number(bid) * 1.2)}
-              </Button>
-              <Button
-                onPress={() =>
-                  submitBid( user_exist ? "update" : "submit", tender.id, Number(bid) * 1.5)
-                }
-              >
-                {formatCurrency(Number(bid) * 1.5)}
-              </Button>
-            </div>
-          </div>
-        )}
-      </PopoverContent>
-    </Popover>
-  ) : (
-    <ActionBid
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      submitBid={submitBid}
-      tender={tender}
-      value={value}
-      user_exist={user_exist}
-    />
- 
-  )}
-
-  <Action tender_uuid={tender.uuid} comment_id={tender.uuid} is_like={tender.tender_like} like_count={tender.tender_like_count} />
-</div> */
-}
 
 const ActionBid = ({
   isOpen,
@@ -769,3 +575,198 @@ const TenderTimer = ({ time }: { time: any }) => {
     </div>
   );
 };
+{
+  /* <div className="w-full h-20 bg-[#f5f5f5] dark:bg-[#242424] rounded-t-2xl flex items-center justify-between box-border px-4">
+  <User
+    name={`${tender.created_by.first_name} ${tender.created_by.last_name}`}
+    avatarProps={{
+      src: `${tender.created_by.image_profile}`,
+    }}
+  />
+  <TenderTimer time={tender.end_time} />
+
+  <div className="flex items-center gap-2">
+  
+    <Chip>{is_tender ? "مزایده" : "مناقصه"}</Chip>
+  </div>
+</div> */
+}
+{
+  /* <div className="flex-1 flex box-border px-5 bg-[#f5f5f5] dark:bg-[#242424] ">
+  <div className="w-96 flex flex-col bg-main_bg/40 rounded-l-2xl" dir="rtl">
+    <div className="flex-1 flex flex-col p-4">
+      <div className="mb-4">
+        <Chip variant="flat" color="success">
+          پیشنهاد دهندگان
+        </Chip>
+        <div className="max-h-[400px] overflow-y-auto">
+          {bidsList.length > 0 ? (
+            bidsList
+              .map((bid) => (
+                <div
+                  key={bid.id}
+                  className="flex justify-between flex-row-reverse items-center p-3 b my-2 hover:bg-foreground-100 rounded-lg transition-all duration-500 ease-in-out"
+                >
+                  <h3 className="text-foreground-300">
+                    {bid.user.username ||
+                      `${bid.user.first_name} ${bid.user.last_name}`}
+                  </h3>
+
+                  <Chip variant="flat" color="danger">
+                    {formatCurrency(Number(bid.amount))}
+                  </Chip>
+                </div>
+              ))
+              .reverse()
+          ) : (
+            <div className="text-center py-4 text-gray-500">
+              هنوز پیشنهادی ثبت نشده است
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+    <Divider className="w-3/4 mx-auto bg-c_background" />
+    <div className="h-20  border-stone-800 flex flex-col items-center justify-center gap-2 box-border px-20 w-full ">
+      <div className="flex  items-center justify-between gap-4 w-full">
+        {is_tender ? (
+          <>
+            <Chip variant="flat" color="success" dir="rtl">
+              {formatCurrency(Number(bid))}
+            </Chip>
+            <span>بالاترین قیمت</span>
+          </>
+        ) : (
+          <>
+            <Chip variant="flat" color="success" dir="rtl">
+              {formatCurrency(Number(bid))}
+            </Chip>
+            <span>ورودی</span>
+          </>
+        )}
+      </div>
+      <div className="border border-t-1 border-dashed border-stone-700 w-full"></div>
+    </div>
+  </div>
+
+  <Divider orientation="vertical" className="bg-c_background" />
+
+  <div className="flex-1 p-4 flex flex-col overflow-hidden bg-main_bg/40 rounded-r-2xl  ">
+    {tender.image && (
+      <div className="mb-4">
+        <img
+          src={`${tender.image}`}
+          alt={tender.title}
+          className="rounded-lg object-cover w-full h-[200px]"
+        />
+      </div>
+    )}
+
+    <div
+      className="flex flex-col gap-4 z-10  w-full mx-auto   box-border  flex-1 relative"
+      dir="rtl"
+    >
+      <h2 className="text-xl font-blackSans mb-4">{tender.title}</h2>
+
+      <div className="mt-4">
+        <div className=" rounded-lg">
+          <h2 className="font-lightSans leading-7">{tender.description}</h2>
+        </div>
+      </div>
+
+      <div className="mt-4 w-1/4">
+        {tender.project != null && <EventCard data={tender.project} />}
+      </div>
+    
+    </div>
+  </div>
+</div> */
+}
+
+{
+  /* <div className="w-full h-20 bg-[#f5f5f5] dark:bg-[#242424] rounded-b-2xl flex items-center justify-between box-border px-4 ">
+  {is_tender ? (
+    <Popover
+      showArrow
+      offset={10}
+      placement="bottom"
+      onOpenChange={(open) => setIsOpen(open)}
+      isOpen={isOpen}
+    >
+      <PopoverTrigger>
+        <Button
+          color="secondary"
+          size="sm"
+          className="bg-purple-700 "
+          startContent={<Coins />}
+          onPress={() => submitBid( user_exist ? "update" : "submit", tender.id, Number(value))}
+        >
+          {user_exist ? "بروزرسانی پیشنهاد" : "شرکت در مزایده"}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        {(titleProps) => (
+          <div className="px-1 py-2 w-full">
+            <p
+              className="text-small font-bold text-foreground"
+              {...titleProps}
+            ></p>
+            <div className="mt-2 flex flex-col gap-2 w-full">
+              <NumberInput
+                isRequired
+                color="success"
+                ref={value}
+                min={0}
+                label="قیمت"
+                errorMessage="قیمت را وارد نمایید"
+                placeholder="قیمت خود را وارد نمایید"
+                type="number"
+                defaultValue={Number(bid)}
+                endContent={
+                  <Button
+                    color="success"
+                    size="sm"
+                    onPress={() =>
+                      submitBid( user_exist ? "update" : "submit", tender.id, Number(value))
+                    }
+                  >
+                    تایید
+                  </Button>
+                }
+                size="lg"
+                variant="faded"
+              />
+              <Button
+                onPress={() =>
+                  submitBid( user_exist ? "update" : "submit", tender.id, Number(bid) * 1.2)
+                }
+              >
+                {formatCurrency(Number(bid) * 1.2)}
+              </Button>
+              <Button
+                onPress={() =>
+                  submitBid( user_exist ? "update" : "submit", tender.id, Number(bid) * 1.5)
+                }
+              >
+                {formatCurrency(Number(bid) * 1.5)}
+              </Button>
+            </div>
+          </div>
+        )}
+      </PopoverContent>
+    </Popover>
+  ) : (
+    <ActionBid
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      submitBid={submitBid}
+      tender={tender}
+      value={value}
+      user_exist={user_exist}
+    />
+ 
+  )}
+
+  <Action tender_uuid={tender.uuid} comment_id={tender.uuid} is_like={tender.tender_like} like_count={tender.tender_like_count} />
+</div> */
+}

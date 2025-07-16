@@ -30,7 +30,7 @@ export interface Main {
   user_job_history: UserJobHistory[];
   user_degree: UserDegree[];
   user_main_comment: UserMainComment[];
-  user_foreign_language: []
+  user_foreign_language: [];
 }
 
 export interface Followers {
@@ -128,7 +128,7 @@ export interface UserMainComment {
   user: CommentedUserClass;
   commented_user: CommentedUserClass;
   rate: number;
-  tags:string;
+  tags: string;
 }
 
 export interface CommentedUserClass {
@@ -141,10 +141,17 @@ export interface CommentedUserClass {
 }
 
 export interface UserForiegnLanguage {
-  id: number,
-  created_at: string,
-  updated_at: string,
-  name: string,
-  rate: number,
-  user: number
+  id: number;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  rate: number;
+  user: number;
+}
+export interface JwtDecodedToken {
+  token_type: "access" | "refresh";
+  exp: number; 
+  iat: number; 
+  jti: string; 
+  user_id: number; 
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Slider } from "antd";
+import { Slider } from "@heroui/react";
 
 type RangeFilterProps = {
   min?: number;
@@ -14,29 +14,28 @@ const RangeFilter: React.FC<RangeFilterProps> = ({
   min = 0,
   max = 10000,
   step = 100,
-  range,
   setRange,
-  className,
+  range,
 }) => {
-  const handleChange = (value: number[]) => {
-    setRange(value as number[]);
+  const handleChange = (value: number | number[]) => {
+    if (Array.isArray(value)) {
+      setRange(value);
+    } else {
+      setRange([value, value]);
+    }
   };
-
   return (
     <div>
       <Slider
-        range
-        step={step}
-        min={min}
-        max={max}
+        aria-label="Temperature"
+        className="max-w-md"
+        size="sm"
+        color={"success"}
         value={range}
         onChange={handleChange}
-        className={className}
-        styles={{
-          track: { backgroundColor: "#80FF00", height: 3 },
-          handle: { backgroundColor: "#80FF00", borderColor: "#80FF00" },
-          rail: { backgroundColor: "#737373", height: 3 },
-        }}
+        maxValue={max}
+        minValue={min}
+        step={step}
       />
     </div>
   );

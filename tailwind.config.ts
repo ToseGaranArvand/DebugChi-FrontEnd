@@ -1,4 +1,3 @@
-
 // import type { Config } from "tailwindcss";
 // import flowbite from "flowbite-react/tailwind";
 // export default {
@@ -103,8 +102,8 @@
 //   plugins: [require("tailwindcss-animate")],
 // } satisfies Config;
 // tailwind.config.js
-import {heroui} from "@heroui/react";
-import { fontFamily } from 'tailwindcss/defaultTheme';
+import { heroui } from "@heroui/react";
+import { fontFamily } from "tailwindcss/defaultTheme";
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
@@ -116,35 +115,47 @@ const config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     // ...
     // make sure it's pointing to the ROOT node_module
-    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}"
+    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
-      colors:{
-          c_background:"#2c2552",
-          c_secondary:"#232035",
-          input:"#1C1C1C",
-          main_bg:"#140a31",
-          community:"#1D142D",
-          bg_global_blur:"#002D78",
-          btn_primary:"#3344D9",
-          bg_card:"#0F0F0F"
+      colors: {
+        c_background: "#2c2552",
+        c_secondary: "#232035",
+        input: "#1C1C1C",
+        main_bg: "#140a31",
+        community: "#1D142D",
+        bg_global_blur: "#002D78",
+        btn_primary: "#3344D9",
+        bg_card: "#0F0F0F",
       },
       fontFamily: {
-        iranSans: ["var(--font-iran-sans)",...fontFamily.sans,],
-        lightSans: ['iran-sans-lt'],
-        mediumSans: ['iran-sans-md'],
-        blackSans: ['iran-sans-bl'],
-        ultraLightSans: ['iran-sans-ul'],
-        Giest:['en-font'],
-        GiestMono:['en-font-mono'],
+        iranSans: ["var(--font-iran-sans)", ...fontFamily.sans],
+        lightSans: ["iran-sans-lt"],
+        mediumSans: ["iran-sans-md"],
+        blackSans: ["iran-sans-bl"],
+        ultraLightSans: ["iran-sans-ul"],
+        Giest: ["en-font"],
+        GiestMono: ["en-font-mono"],
+        iranRegular: ["iranRegular", "sans-serif"],
+        iran: ["iran", "sans-serif"],
+        iranBold: ["iranBold", "sans-serif"],
+        iranLight: ["iranLight", "sans-serif"],
+        iranMedium: ["iranMedium", "sans-serif"],
+        iranUltraLight: ["iranUltraLight", "sans-serif"],
+        iranNumBlack: ["iranNumBlack", "sans-serif"],
+        iranNumMedium: ["iranNumMedium", "sans-serif"],
+        iranNumUltraLight: ["iranNumUltraLight", "sans-serif"],
+        iranNumBold: ["iranNumBold", "sans-serif"],
+        yekan: ["yekan", "sans-serif"],
       },
       animation: {
         "shiny-text": "shiny-text 8s infinite",
         ripple: "ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite",
-        scroll: "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite"
+        scroll:
+          "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
       },
-   
+
       keyframes: {
         "shiny-text": {
           "0%, 90%, 100%": {
@@ -171,21 +182,18 @@ const config = {
     },
   },
   darkMode: "class",
-  plugins: [heroui(),addVariablesForColors]
-}
-
+  plugins: [heroui(), addVariablesForColors],
+};
 
 function addVariablesForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
- 
+
   addBase({
     ":root": newVars,
-    
   });
 }
-
 
 export default config;

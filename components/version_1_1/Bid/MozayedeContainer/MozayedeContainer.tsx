@@ -1,34 +1,40 @@
 "use client";
 // base
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 // components
 import { MozayedeCard } from "./Components/MozayedeCard/MozayedeCard";
-import { MozayedeHeader } from "./Components/MozayedeHeader/MozayedeHeader";
 // core
 import { GradientDivider } from "./Components/GradientDivider/GradientDivider";
-import { auctionData } from "@/data/db";
-import { Tender } from "@/components/types/tender.type";
+import { Result } from "@/components/types/tender.type";
+import { useBidFilter } from "@/context/BidFilterContext";
+
 type Props = {
-  tender: Tender;
+  results: Result[];
 };
-const MozayedeContainer: FC<Props> = ({ tender }) => {
+const MozayedeContainer: FC<Props> = ({ results }) => {
+  const { setData } = useBidFilter();
+
+  useEffect(() => {
+    setData((prevData) => {
+      if (JSON.stringify(prevData) !== JSON.stringify(results)) {
+        return results;
+      }
+      return prevData;
+    });
+  }, [results, setData]);
   return (
-    <div
-      dir="rtl"
-      className="min-h-screen text-white lg:py-0 py-[80px] lg:bg-none bg-gradient-to-b from-black to-[#000026]"
-    >
-      <div className="lg:hidden">
-        <MozayedeHeader />
-      </div>
-      {auctionData.map((item, index) => (
-        <div key={index}>
-          <MozayedeCard auctionData={item} tender={tender} />
-          <div className="lg:hidden">
-            <GradientDivider />
+    <>
+      <div className="w-full grid grid-cols-1 max-[1023px]:grid-cols-2 max-[833px]:grid-cols-1 place-content-start text-white">
+        {results.map((item, index) => (
+          <div className="h-fit" key={index}>
+            <MozayedeCard tender={item.tender} bids={item.bids} />
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+      <div className="lg:hidden">
+        <GradientDivider />
+      </div>
+    </>
   );
 };
 

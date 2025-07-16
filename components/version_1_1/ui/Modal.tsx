@@ -1,56 +1,66 @@
-// base
-import React, { CSSProperties } from "react";
-// lib
-import { Modal } from "antd";
-// core
-// style
-import "./ui.css";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "@heroui/react";
+import React, { FC } from "react";
 
-interface ICustomModalPropTypes {
-  open: boolean;
-  onCancel: () => void;
-  onOk?: () => void;
-  children: React.ReactNode;
-  className?: string;
-  okText?: string;
-  cancelText?: string;
-  footer?: React.ReactNode;
-  centered?: boolean;
-  closable?: boolean;
-  width?: number;
-  style?: CSSProperties;
+interface CustomModalProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onOpen: () => void;
+  btnText: string;
+  btnClassName?: string;
+  modalHeaderClassname?: string;
+  modalHeader?: React.ReactNode;
+  children?: React.ReactNode;
+  modalFooter?: React.ReactNode;
+  hideCloseButton?: boolean;
 }
 
-const CustomModal: React.FC<ICustomModalPropTypes> = ({
-  open,
-  onCancel,
-  onOk,
+const CustomModal: FC<CustomModalProps> = ({
+  isOpen,
+  onOpenChange,
+  onOpen,
+  btnText,
+  btnClassName,
+  modalHeaderClassname,
+  modalHeader,
   children,
-  okText = "تأیید",
-  cancelText = "انصراف",
-  footer,
-  centered = true,
-  width = 520,
-  closable,
-  style,
-  className,
+  modalFooter,
+  hideCloseButton = true,
 }) => {
   return (
-    <Modal
-      style={style}
-      className={className}
-      closable={closable}
-      open={open}
-      onCancel={onCancel}
-      onOk={onOk}
-      okText={okText}
-      cancelText={cancelText}
-      centered={centered}
-      width={width}
-      footer={footer !== undefined ? footer : undefined}
-    >
-      {children}
-    </Modal>
+    <>
+      <Button className={btnClassName} onPress={onOpen}>
+        {btnText}
+      </Button>
+      <Modal
+        className="shadow-none"
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        hideCloseButton={hideCloseButton}
+      >
+        <ModalContent className="!bg-transparent !border-none">
+          {(onClose) => (
+            <>
+              {modalHeader && (
+                <ModalHeader
+                  className={`flex flex-col gap-1 ${modalHeaderClassname}`}
+                >
+                  {modalHeader}
+                </ModalHeader>
+              )}
+              <ModalBody>{children}</ModalBody>
+              {modalFooter && <ModalFooter>{modalFooter}</ModalFooter>}
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

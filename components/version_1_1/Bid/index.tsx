@@ -17,9 +17,10 @@ import {
 } from "@heroui/react";
 import CardGradient from "../ui/CardGradient";
 import { useEffect, useState } from "react";
-import { MessageCircle, Mic, PhoneCall, Video } from "lucide-react";
+import { MessageCircle, PhoneCall, Video } from "lucide-react";
 import { perform_get } from "@/lib/api";
 import { MozayedeContainer } from "./MozayedeContainer/MozayedeContainer";
+import { useMemo } from "react";
 
 type Props = {
   data: Main;
@@ -27,28 +28,36 @@ type Props = {
 
 const Bid = ({ data }: Props) => {
   const { filter, priceValue, show } = useBidFilter();
-
+  console.log(data);
+  
   const filterType =
     filter.type === "all" ? ["tender", "auction"] : [filter.type];
-  const [minPrice, maxPrice] = priceValue.toString().split(",").map(Number);
+  const [minPrice, maxPrice] = useMemo(() => {
+    return priceValue.toString().split(",").map(Number);
+  }, [priceValue.toString()]);
 
-  const filteredResults = data.results
-    ?.filter((item) => item.tender)
-    .filter((item) =>
-      filterType.includes(item.tender.mode as "tender" | "auction")
-    )
-    .filter(
-      (item) =>
-        item.tender.start_bid >= minPrice && item.tender.start_bid <= maxPrice
-    )
-    .filter((item) => {
-      if (!filter.search_text?.trim()) return true; // اگر متن خالیه، فیلتر نکن
-      const text = filter.search_text.toLowerCase();
-      return (
-        item.tender.title.toLowerCase().includes(text) ||
-        item.tender.description.toLowerCase().includes(text)
-      );
-    });
+  const filteredResults = useMemo(() => {
+    return (
+      data.results
+        ?.filter((item) => item.tender)
+        .filter((item) =>
+          filterType.includes(item.tender.mode as "tender" | "auction")
+        )
+        .filter(
+          (item) =>
+            item.tender.start_bid >= minPrice &&
+            item.tender.start_bid <= maxPrice
+        )
+        .filter((item) => {
+          if (!filter.search_text?.trim()) return true;
+          const text = filter.search_text.toLowerCase();
+          return (
+            item.tender.title.toLowerCase().includes(text) ||
+            item.tender.description.toLowerCase().includes(text)
+          );
+        }) || []
+    );
+  }, [data, filter.type, filter.search_text, priceValue]);
 
   return (
     <div
@@ -56,13 +65,10 @@ const Bid = ({ data }: Props) => {
         show === false && "overflow-y-auto"
       } scrollbar-hide relative`}
     >
-      <div className="w-full h-full flex flex-col gap-4 mt-24 relative ">
+      <div className="w-full relative ">
         {show && <AllActivitiesCLass />}
         {filteredResults && filteredResults.length > 0 ? (
-          filteredResults.map((result, index) => (
-            // <Card key={index} tender={result.tender} bids={result.bids} />
-            <MozayedeContainer  tender={result.tender}/>
-          ))
+          <MozayedeContainer results={filteredResults} />
         ) : (
           <div className="flex items-center justify-center w-full h-full text-center text-gray-500">
             مزایده‌ای پیدا نشد

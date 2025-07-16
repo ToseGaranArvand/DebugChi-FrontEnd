@@ -31,6 +31,7 @@ import {
 } from "@heroui/react";
 import {
   CreditCard,
+  EyeOff,
   Filter,
   History,
   Home,
@@ -40,15 +41,19 @@ import {
   Plus,
   Search,
   Trash2,
+  Wallet2Icon,
 } from "lucide-react";
 import { div, span } from "motion/react-client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import AddNewCard from "./AddNewCard";
 import Image from "next/image";
 import { perform_post } from "@/lib/api";
 import { setDescription } from "@/redux/slices/aiSlice";
 import { I18nProvider } from "@react-aria/i18n";
 import DeleteModal from "./deleteModal";
+import { HistorySvg } from "@/public/images/svg/dashboardTap/HistorySvg";
+import { AddMoneySvg } from "@/public/images/svg/dashboardTap/AddMoneySvg";
+import { GetMoneySvg } from "@/public/images/svg/dashboardTap/GetMoneySvg";
 type Props = {
   user: Main;
 };
@@ -60,57 +65,65 @@ const Wallet = (props: Props) => {
   }, []);
   return (
     <ModalProvider>
-      <div className="w-full flex h-full flex-wrap gap-4  box-border pb-4 justify-center relative">
-        <div className="absolute bottom-0 bg-c_secondary w-full h-20 rounded-tr-3xl rounded-tl-3xl"></div>
-
-        <Tabs
-          color="primary"
-          aria-label="Tabs variants"
-          variant="light"
-          placement="bottom"
-          className="w-96"
-          classNames={{
-            tab: "p-0",
-            tabContent: "h-10 flex items-center justify-center",
-            panel: "p-0 bg",
-          }}
-          fullWidth
-          size="lg"
-          radius="full"
-        >
-          <Tab key="home" className="w-full h-full" title={<Home />}>
-            <TabHome user={props.user} />
-          </Tab>
-
-          <Tab
-            key="history"
-            className="w-full h-full"
-            title={
-              <div className="flex gap-2 items-center">
-                <History />
-                <Chip variant="flat" color="primary" size="sm" radius="full">
-                  5
-                </Chip>
-              </div>
-            }
-          >
-            <TabHistory />
-          </Tab>
-          <Tab
-            key="notfication"
-            className="w-full h-full"
-            title={
-              <div className="flex gap-2 items-center">
-                <Mail />
-                <Chip variant="flat" color="primary" size="sm" radius="full">
-                  5
-                </Chip>
-              </div>
-            }
-          >
-            <TabNotification />
-          </Tab>
-        </Tabs>
+      <div className="rounded-2xl p-0.5 bg-gradient-to-r from-black to-[#242424]">
+        <div className="bg-[#0F0F0F] px-3 pb-[6px] rounded-2xl w-[366px] ">
+          <CartLabel />
+          <div className="flex w-full mt-2 flex-col">
+            <Tabs
+              classNames={{
+                tabList: "bg-[#18151E] p-0 w-full h-[63px] rounded-xl",
+                tab: "text-gray-700 h-full px-4 py-2",
+                tabContent: "text-sm",
+              }}
+            >
+              <Tab
+                key="photos"
+                title={
+                  <div className="flex flex-col items-center gap-[1px] pt-[3px]">
+                    <HistorySvg />
+                    <span className="text-[10px]">تاریخچه</span>
+                  </div>
+                }
+              >
+                <TabHistory />
+              </Tab>
+              <Tab
+                key="music"
+                title={
+                  <div className="flex flex-col items-center gap-[1px] pt-[3px]">
+                    <AddMoneySvg />
+                    <span className="text-[10px]">افزایش موجودی</span>
+                  </div>
+                }
+              >
+                <Card>
+                  <CardBody>
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                    irure dolor in reprehenderit in voluptate velit esse cillum
+                    dolore eu fugiat nulla pariatur.
+                  </CardBody>
+                </Card>
+              </Tab>
+              <Tab
+                key="videos"
+                title={
+                  <div className="flex flex-col items-center gap-[1px] pt-[3px]">
+                    <GetMoneySvg />
+                    <span className="text-[10px]">برداشت</span>
+                  </div>
+                }
+              >
+                <Card>
+                  <CardBody>
+                    Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum.
+                  </CardBody>
+                </Card>
+              </Tab>
+            </Tabs>
+          </div>
+        </div>
       </div>
     </ModalProvider>
   );
@@ -118,133 +131,124 @@ const Wallet = (props: Props) => {
 
 export default Wallet;
 
-const TabHome = ({ user }: { user: Main }) => {
-  const { show, setShow } = useModalContext();
-  // const card = user.user_bank_cards.find((item) => item.default_card == true);
+const CartLabel = () => {
+  const withdraw = 100000000;
+  const blockedWithdraw = 30000000;
+  const [show, setShow] = useState(false);
   return (
-    <div className="h-full flex flex-col gap-2 relative">
-      <div className="w-full flex flex-row-reverse flex-1 bg-[radial-gradient(circle,_var(--tw-gradient-stops))]  from-violet-800 to-violet-400 rounded-3xl relative box-border p-5">
-        {/* <div
-          className="w-full flex-1 mt-5 flex flex-col text-background gap-5"
-          dir="rtl"
-        > */}
-        {/* <div className="flex justify-between box-border px-4"> */}
-        {/* <span className="text-2xl font-blackSans">{card?.title}</span> */}
-        {/* <span className="text-2xl font-blackSans">{user.first_name + " " + user.last_name}</span> */}
-        {/* </div> */}
-        {/* <span className="text-3xl font-blackSans">{formatCardNumber(String(card?.card_number))}</span> */}
-        {/* </div> */}
-        <div className="text-xl text-background flex flex-col gap-2 w-full mt-5 items-end">
-          <span className="text-foreground-900 font-blackSans">
-            : موجودی من
-          </span>
-          <span className="flex gap-2 mt-5">
-            <span>تومان</span>
-            <span>{formatCurrency(user.digital_wallet, true)}</span>
-          </span>
-          {user.blocked_wallet == 0 ? (
-            <span>بلاک شده : {user.blocked_wallet}</span>
-          ) : (
-            <span>{formatCurrency(user.blocked_wallet, true)}</span>
-          )}
+    <div className="pt-2">
+      <h1 className="pr-2 text-lg font-iranBold">کیف پول</h1>
+      <div className="relative w-full h-[166px] mt-[7px] px-4 pt-[19px] bg-gradient-to-r from-[#0084FF] to-[#2A184A] rounded-xl overflow-hidden">
+        <Image
+          className="absolute -left-2.5 -top-[14px]"
+          src="/images/dashboard/Ellipse.png"
+          alt=""
+          width={90}
+          height={80}
+        />
+        <Image
+          className="absolute left-3 top-3"
+          src="/images/dashboard/Circles.png"
+          alt=""
+          width={40}
+          height={27}
+        />
+        <Button
+          onPress={() => setShow(!show)}
+          className="!bg-transparent absolute right-3 bottom-3"
+          isIconOnly
+          startContent={
+            <Image
+              width={25}
+              height={25}
+              alt=""
+              src={show ? "/images/svg/ShowSvg.svg" : "/images/svg/HideSvg.svg"}
+              className="w-[22px] h-[22px] opacity-[38%]"
+            />
+          }
+        />
+        <div className="flex items-center gap-2">
+          <Image
+            src="/images/svg/WalletSvg.svg"
+            alt=""
+            width={18}
+            height={18}
+          />
+          <h1 className="text-lg">حساب دیجیتال</h1>
+        </div>
+        <div className="w-full mt-[53px] flex justify-end gap-7 text-[11px]">
+          <div
+            className={`flex flex-col items-end ${
+              show ? "gap-1.5" : "gap-2.5"
+            }`}
+          >
+            <span className="">موجودی بلاک شده</span>
+            <span className="text-2xl font-iranNumBold">
+              {show ? `${formatCurrency(blockedWithdraw, true)}` : " *********"}
+            </span>
+          </div>
+          <div className="flex flex-col items-end gap-1.5">
+            <span className="">موجودی حساب</span>
+            <span className="text-[#9BD702] text-2xl font-iranNumBold">
+              {formatCurrency(withdraw, true)}
+            </span>
+          </div>
         </div>
       </div>
-      <div className="h-4/6 flex flex-col px-2 gap-2">
-        <ActionButtons />
-        <FinancialActivities />
-      </div>
-      <ActionButtonModal>
-        <AddNewCardContent />
-      </ActionButtonModal>
     </div>
   );
 };
 
 const TabHistory = () => {
   return (
-    <div className="h-full flex flex-col gap-2">
-      <div className="w-full flex-1 bg-[radial-gradient(circle,_var(--tw-gradient-stops))]  from-violet-800 to-violet-400 rounded-3xl relative">
-        <span className="absolute left-4 bottom-2 text-xl text-slate-200">
-          {formatCurrency(500000, true)}
+    <div>
+      <h1 className="pt-[26px] text-[#BCBCBC] text-xs">تاریخچه اخیر</h1>
+      <div className="max-h-[272px] overflow-auto mt-[14px] space-y-[9px]">
+        <HistoryCard type="deposit" />
+        <HistoryCard type="withdraw" />
+        <HistoryCard type="withdraw" />
+        <HistoryCard type="deposit" />
+      </div>
+    </div>
+  );
+};
+
+const HistoryCard: FC<{ type: "deposit" | "withdraw" }> = ({ type }) => {
+  return (
+    <div className="w-full h-[131px] p-2.5 rounded-xl bg-[#18151E]">
+      <div className="flex items-center justify-between">
+        <div className="w-[70px] h-[23px] pt-[3px] bg-[#2E2A37] rounded-md text-center text-xs text-[#9BD702] font-iranRegular">
+          {type === "deposit" ? "واریزی" : "برداشت"} موفق
+        </div>
+        <Image
+          src={
+            type === "deposit"
+              ? "/images/svg/dashboardTap/DownSvg.svg"
+              : "/images/svg/dashboardTap/UpSvg.svg"
+          }
+          alt=""
+          width={16}
+          height={16}
+        />
+      </div>
+      <div className="mt-[19px] pr-1 pl-3 flex items-center justify-between">
+        <span className="text-xs">
+          {type === "deposit" ? "واریز به" : "برداشت از"} حساب شما
+        </span>
+        <span
+          className={`text-lg ${
+            type === "deposit" ? "text-[#9BD702]" : "text-[#FF4A4A]"
+          }`}
+        >
+          ۲۵۰،۰۰۰
         </span>
       </div>
-      <div className="h-4/6 flex flex-col px-1 gap-2">
-        <FilterAction />
-        <div className="flex gap-2" dir="rtl">
-          <I18nProvider locale="fa-IR">
-            <DatePicker
-              className="max-w-[284px]"
-              label="از تاریخ"
-              variant="bordered"
-            />
-            <DatePicker
-              className="max-w-[284px]"
-              label="تا تاریخ"
-              variant="bordered"
-            />
-          </I18nProvider>
-        </div>
-        <FinancialActivities />
-      </div>
-    </div>
-  );
-};
-
-const TabNotification = () => {
-  const [selectedFilter, setSelectedFilter] = useState<string>("همه");
-
-  return (
-    <div className="h-full flex flex-col gap-2 box-border p-2">
-      <FilterNotificationAction
-        selectedFilter={selectedFilter}
-        setSelectedFilter={setSelectedFilter}
-      />
-      <div className="max-h-[700px]" dir="rtl">
-        <FilterNotificationContent selectedFilter={selectedFilter} />
-      </div>
-    </div>
-  );
-};
-
-const FilterNotificationAction = ({
-  selectedFilter,
-  setSelectedFilter,
-}: {
-  selectedFilter: string;
-  setSelectedFilter: (filter: string) => void;
-}) => {
-  const filterOptions = ["همه", "لایک", "کامنت", "فالو"].reverse();
-  const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const currentIndex = filterOptions.indexOf(selectedFilter);
-    if (currentIndex !== -1 && filterRefs.current[currentIndex]) {
-      filterRefs.current[currentIndex].scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-      });
-    }
-  }, [selectedFilter]);
-
-  return (
-    <div className="w-full h-auto flex items-center justify-between p-2 gap-2 bg-[#18181b] rounded-2xl">
-      <div className="max-w-full h-14 w-full overflow-x-scroll whitespace-nowrap flex items-center gap-4 px-2 scrollbar-hide justify-end">
-        {filterOptions.map((item, index) => (
-          <div
-            key={item}
-            ref={(el: any) => (filterRefs.current[index] = el)}
-            className="cursor-pointer"
-            onClick={() => setSelectedFilter(item)}
-          >
-            <Chip
-              variant={item === selectedFilter ? "solid" : "flat"}
-              color="primary"
-              className="shrink-0"
-            >
-              {item}
-            </Chip>
-          </div>
-        ))}
+      <div className="h-[1px] mt-1 bg-gradient-to-r from-[#18151E] via-[#362e42] to-[#18151E]"></div>
+      <div className="mt-[5px] pr-1 pl-3 flex items-center justify-between">
+        <span className="text-xs">
+          تاریخ {type === "deposit" ? "واریزی" : "برداشت"}
+        </span>
+        <span className="text-sm font-iranRegular">۴۵ / ۰۴ / ۱۴۰۳</span>
       </div>
     </div>
   );
@@ -717,8 +721,6 @@ const AddNewCardContent = () => {
     }
   };
 
-
-
   return (
     <div
       className={`w-full h-full flex flex-col gap-4 bg-c_secondary rounded-2xl box-border p-4`}
@@ -741,9 +743,7 @@ const AddNewCardContent = () => {
                 <div
                   key={item.id}
                   className="w-full  mx-auto h-20 rounded-3xl flex gap-4 items-center justify-between box-border px-4 bg-default-50 relative"
-
                 >
-
                   <Image
                     src={"/bank/tejarat.png"}
                     alt={item.title}
@@ -753,13 +753,13 @@ const AddNewCardContent = () => {
                   />
                   {formatCardNumber(item.card_number)}
 
-                <DeleteModal 
-                title="حذف کارت"
-                description="آیا از حذف کار خود مطمئنید؟"
-                url={`auths/user_cards/?card_id=${item.id}`}
-                />
+                  <DeleteModal
+                    title="حذف کارت"
+                    description="آیا از حذف کار خود مطمئنید؟"
+                    url={`auths/user_cards/?card_id=${item.id}`}
+                  />
                 </div>
-              );  
+              );
             })}
 
             {/* <RadioGroup

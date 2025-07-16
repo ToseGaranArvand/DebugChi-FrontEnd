@@ -95,6 +95,7 @@ import Logout from "@/components/routes/auth/logout";
 import Sidebar from "@/components/version_1_1/Sidebar";
 import SidebarBody from "@/components/version_1_1/Sidebar/SideBar";
 import SidebarFooter from "@/components/version_1_1/Sidebar/sidebar-footer";
+import BackgroundGlobalGradient from "@/components/version_1_1/ui/backgorund-gradiant-global";
 import ProfileEdit from "@/components/version_1_1/User/Edit/ProfileEdit";
 import UserDashboard from "@/components/version_1_1/User/UserDashboard";
 import Wallet from "@/components/version_1_1/User/Wallet";
@@ -113,34 +114,35 @@ const page = async ({ params }: any) => {
   // console.log(posts);
 
   if (response.status == 401) {
-    return <div className="flex items-center justify-center w-full h-screen">کاربر پیدا نشد</div>;
+    return (
+      <div className="flex items-center justify-center w-full h-screen">
+        کاربر پیدا نشد
+      </div>
+    );
   } else {
     return (
-      <main className="w-full h-screen flex">
-        <Sidebar>
-          <SidebarBody />
-          <SidebarFooter user={response} token={token} />
-        </Sidebar>
-        <div className="flex-1 flex flex-row-reverse h-full box-border p-5 gap-4">
-          <div className="bg-foreground-100 rounded-3xl h-full w-96">
+      <main className="w-screen overflow-x-hidden h-screen flex pt-[200px]">
+        <div className="fixed left-0 top-0">
+          <Sidebar>
+            <SidebarBody />
+            <SidebarFooter user={response} token={token} />
+          </Sidebar>
+        </div>
+        <div
+          dir="rtl"
+          className="relative mx-auto flex h-full box-border py-5 px-4 gap-4"
+        >
+          <BackgroundGlobalGradient />
+          <div className="h-full">
             <UserInfoProvider>
               <Wallet user={response} />
             </UserInfoProvider>
           </div>
           <div
-            className=" bg-gradient-to-bl from-c_background/50 to-c_background/40 flex flex-col rounded-3xl flex-1 w-full box-border relative"
+            className=" bg-[gradient-to-bl from-c_background/50 to-c_background/40] flex flex-col rounded-3xl flex-1 w-full box-border relative"
             dir="rtl"
           >
-            <div className="flex  items-center px-12 box-border justify-start gap-4 h-16 rounded-t-2xl w-full bg-foreground-50 sticky top-0">
-              <span className="text-xl">{response.username}</span>
-              <div className="flex-1"></div>
-              <ProfileEdit user={response} />
-              <Logout />
-            </div>
-
-            <div className="w-full box-border flex-1 overflow-y-auto px-4">
-              <UserDashboard user={response} posts={posts} />
-            </div>
+            <UserDashboard />
           </div>
         </div>
       </main>

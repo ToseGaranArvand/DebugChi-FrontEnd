@@ -197,7 +197,7 @@ type Props = {
 
 const Sidebar = ({ children }: Props) => {
   return (
-    <div className="w-32 h-full text-foreground-500 flex flex-col  dark:border-r dark:border-stone-900 max-sm:w-0 max-sm:hidden ">
+    <div className="z-50 w-32 h-screen bg-[#0F0F0F] text-foreground-500 flex flex-col  dark:border-r dark:border-stone-900 max-sm:w-0 max-sm:hidden">
       {children}
     </div>
   );

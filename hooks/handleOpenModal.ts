@@ -1,7 +1,7 @@
 import { Dispatch, RefObject, SetStateAction } from "react";
 
 interface IHandleOpenModalPropTypes {
-  buttonRef: RefObject<HTMLButtonElement | null>;
+  buttonRef?: RefObject<HTMLButtonElement | null>;
   setIsModalAbove?: Dispatch<SetStateAction<boolean>>;
   setModalTop: Dispatch<SetStateAction<number>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -13,8 +13,8 @@ export const handleOpenModal = ({
   setModalTop,
   setIsModalOpen,
 }: IHandleOpenModalPropTypes): void => {
-  if (buttonRef.current) {
-    const rect = buttonRef.current.getBoundingClientRect();
+  if (buttonRef?.current) {
+    const rect = buttonRef?.current.getBoundingClientRect();
     const scrollY = window.scrollY || window.pageYOffset;
     const viewportHeight = window.innerHeight;
     const modalHeight = 271;

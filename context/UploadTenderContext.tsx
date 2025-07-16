@@ -1,9 +1,18 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+} from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { Bid } from "@/components/types/RequestListForBid";
+import { useBidFilter } from "./BidFilterContext";
 
 // Define the shape of our context
 interface TenderType {
@@ -34,28 +43,27 @@ interface ProjectType {
 }
 
 interface Details {
-  state:boolean;
-  bids: any[] ;
+  state: boolean;
+  bids: any[];
 }
 
 interface AcceptModal {
-  stats : boolean;
-  uuid:string;
-  bid_id:number;
+  stats: boolean;
+  uuid: string;
+  bid_id: number;
 }
-
 
 interface TenderContextType {
   images: any[];
   tender: TenderType | null;
   project: ProjectType | null;
-  details : Details;
+  details: Details;
   acceptModal: AcceptModal;
-  unSeenBid:boolean;
-  showUpload:boolean,
-setShowUpload:(show:boolean)=>void;
+  unSeenBid: boolean;
+  showUpload: boolean;
+  setShowUpload: (show: boolean) => void;
 
-  setBidStatus:(bid_id:number)=>void;
+  setBidStatus: (bid_id: number) => void;
   setUnseenBids: (unSeen: boolean) => void;
   setAcceptModal: (acceptModal: AcceptModal) => void;
   setDetails: (details: Details) => void;
@@ -64,7 +72,6 @@ setShowUpload:(show:boolean)=>void;
   setProjectData: (project: ProjectType) => void;
 }
 
-
 const AppContext = createContext<TenderContextType | undefined>(undefined);
 
 export const TenderProvider = ({ children }: { children: ReactNode }) => {
@@ -72,26 +79,25 @@ export const TenderProvider = ({ children }: { children: ReactNode }) => {
   const [project, setProjectData] = useState<ProjectType | null>(null);
   const [images, setImages] = useState<any[]>([]);
   const [unSeenBid, setUnseenBids] = useState(false);
-  const  [showUpload,setShowUpload] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
   const [details, setDetails] = useState<Details>({
     state: false,
     bids: [],
   });
 
+  const setBidStatus = (bid_id: number) => {
+    setDetails((prev) => ({
+      ...prev,
+      bids: prev.bids.map((bid) =>
+        bid.id === bid_id ? { ...bid, status: true } : bid
+      ),
+    }));
+  };
 
-const setBidStatus = (bid_id: number) => {
-  setDetails((prev) => ({
-    ...prev,
-    bids: prev.bids.map((bid) =>
-      bid.id === bid_id ? { ...bid, status: true } : bid
-    ),
-  }));
-};
-  
   const [acceptModal, setAcceptModal] = useState<AcceptModal>({
-    stats:false,
-    uuid:"",
-    bid_id:0
+    stats: false,
+    uuid: "",
+    bid_id: 0,
   });
   return (
     <AppContext.Provider

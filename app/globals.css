@@ -3,55 +3,94 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'iran-sans';
+  font-family: "iran-sans";
   src: url(./fonts/IRANSans\(FaNum\)_Medium.ttf);
 }
 
-
-
 @font-face {
-  font-family: 'iran-sans-md';
+  font-family: "iran-sans-md";
   src: url(./fonts/IRANSans\(FaNum\)_Medium.ttf);
   font-weight: 300;
 }
 @font-face {
-  font-family: 'iran-sans-ul';
+  font-family: "iran-sans-ul";
   src: url(./fonts/IRANSans\(FaNum\)_UltraLight.ttf);
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: 'iran-sans-lt';
+  font-family: "iran-sans-lt";
   src: url(./fonts/IRANSans\(FaNum\)_Light.ttf);
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: 'iran-sans-bl';
+  font-family: "iran-sans-bl";
   src: url(./fonts/IRANSans\(FaNum\)_Black.ttf);
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'en-font';
+  font-family: "en-font";
   src: url(./fonts/GeistVF.woff);
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'en-font-mono';
+  font-family: "en-font-mono";
   src: url(./fonts/GeistMonoVF.woff);
   font-weight: normal;
   font-style: normal;
 }
-
-
-
+@font-face {
+  font-family: "iranRegular";
+  src: url("/fonts/IranSans/IRANSansX-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iran";
+  src: url("/fonts/IranSans/IRANSans.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iranBold";
+  src: url("/fonts/IranSans/IRANSans_Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iranLight";
+  src: url("/fonts/IranSans/IRANSans_Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iranMedium";
+  src: url("/fonts/IranSans/IRANSans_Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iranUltraLight";
+  src: url("/fonts/IranSans/IRANSans_UltraLight.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iranNumBlack";
+  src: url("/fonts/IranSans/IRANSans(FaNum)_Black.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iranNumMedium";
+  src: url("/fonts/IranSans/IRANSansXFaNum-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iranNumUltraLight";
+  src: url("/fonts/IranSans/IRANSansXFaNum-UltraLight.ttf") format("truetype");
+}
+@font-face {
+  font-family: "iranNumBold";
+  src: url("/fonts/IranSans/IRANSansXFaNum-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "yekan";
+  src: url("/fonts/IranSans/yekanRegular.woff") format("truetype");
+}
 
 body {
-  font-family: iran-sans;
+  font-family: iranMedium;
   /* font-size: 20px; */
 }
 

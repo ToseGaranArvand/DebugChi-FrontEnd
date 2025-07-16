@@ -4,7 +4,7 @@ import { FC } from "react";
 import Image from "next/image";
 
 interface IMozayedeBannerProps {
-  image: string;
+  image: string | null;
 }
 
 const MozayedeBanner: FC<IMozayedeBannerProps> = ({ image }) => {
@@ -19,9 +19,10 @@ const MozayedeBanner: FC<IMozayedeBannerProps> = ({ image }) => {
       ></div>
       <div className="lg:hidden h-[89px] w-full overflow-hidden my-[3px]">
         <Image
-          src={image}
+          // بعدا اصلی رو بزار
+          src={"/images/general/LabelSample2.png"}
           alt="banner"
-          className="w-full h-auto"
+          className="w-full h-full"
           width={300}
           height={90}
         />

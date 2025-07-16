@@ -1,20 +1,19 @@
 // base
+import { Bid } from "@/components/types/tender.type";
 import { FC } from "react";
 // core
-interface Bid {
-  username: string;
-  amount: string;
-}
+
 
 interface BidListProps {
   bids: Bid[];
 }
 
 const BidList: FC<BidListProps> = ({ bids }) => {
+  
   return (
     <div className="h-[78px] mt-[14px] p-3 bg-[#040404] rounded-[15px]">
-      {bids.map(({ username, amount }, idx) => (
-        <div key={`${username}-${idx}`}>
+      {bids.map((bid, idx) => (
+        <div key={bid.id}>
           {idx !== 0 && (
             <div
               style={{
@@ -28,10 +27,10 @@ const BidList: FC<BidListProps> = ({ bids }) => {
             <div className="font-iranLight">
               تومان
               <span className="mr-2 text-[16px] text-[#B5E80F] font-iranBold">
-                {amount}
+                {bid.amount}
               </span>
             </div>
-            <div className="font-iranRegular">{username}</div>
+            <div className="font-iranRegular">{bid.user.username}</div>
           </div>
         </div>
       ))}

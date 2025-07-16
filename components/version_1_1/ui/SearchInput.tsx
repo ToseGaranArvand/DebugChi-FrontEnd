@@ -1,10 +1,16 @@
 // base
 import React, { FC } from "react";
-// lib
-import { Input } from "antd";
+
 // core
-import { ISearchInputPropTypes } from "@/src/core/types/props/ISearchInputPropTypes";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+
+interface ISearchInputPropTypes {
+  placeholder?: string;
+  className?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
 
 const SearchInput: FC<ISearchInputPropTypes> = ({
   placeholder = "جستجو کنید...",
@@ -20,7 +26,7 @@ const SearchInput: FC<ISearchInputPropTypes> = ({
           } as React.CSSProperties,
           { resize: "none" })
         }
-        className={`w-full !ring-offset-0 !shadow-none pl-12 flex-row-reverse ${className}`}
+        className={`w-full pr-3 !ring-offset-0 !shadow-none pl-12 flex-row-reverse ${className}`}
         placeholder={placeholder}
       />
       <Image

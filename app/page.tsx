@@ -62,7 +62,7 @@ export default async function Home() {
       </Sidebar>
 
       <div className="flex-1 flex relative h-full overflow-hidden box-border p-4 gap-4">
-        <BackgroundGlobalGradient/>
+        <BackgroundGlobalGradient />
         <div className="relative flex flex-col h-full w-full">
           <FindUser />
           <AnswerProvider>
@@ -78,7 +78,6 @@ export default async function Home() {
     </main>
   );
 }
-
 
 // 09303362613      دانش اموز
 // 09361226758

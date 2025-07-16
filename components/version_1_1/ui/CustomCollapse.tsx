@@ -1,14 +1,11 @@
-//base
+// base
 import { FC, useState } from "react";
 
-//lib
-import { Collapse, Typography, Space } from "antd";
-
-//style
+// style
 import "./ui.css";
 import Image from "next/image";
 
-//core
+// core
 export interface ICustomCollapsePropTypes {
   placeHolder?: string;
   dataItems: { key: string; label: string }[];
@@ -40,9 +37,7 @@ const CustomCollapse: FC<ICustomCollapsePropTypes> = ({
   const handleClick = (item: { key: string; label: string }) => {
     setSelectedItem(item.label);
     setIsOpen(false);
-    if (handeler) {
-      handeler(item);
-    }
+    handeler?.(item);
   };
 
   return (
@@ -52,8 +47,8 @@ const CustomCollapse: FC<ICustomCollapsePropTypes> = ({
         style={{ background: bg }}
         className={`cursor-pointer flex rounded-[12px] overflow-hidden ${className}`}
       >
-        <Typography.Link className="w-full flex items-center">
-          <Space
+        <div className="w-full flex items-center">
+          <div
             style={{ color: textColor }}
             className="m-0 p-0 pr-3 pl-2 w-full flex items-center justify-between sm:gap-5 gap-3 leading-none text-nowrap"
           >
@@ -69,39 +64,28 @@ const CustomCollapse: FC<ICustomCollapsePropTypes> = ({
                 isOpen ? "rotate-180" : "rotate-0"
               }`}
             />
-          </Space>
-        </Typography.Link>
+          </div>
+        </div>
       </section>
 
-      <Collapse
-        className={`transition-all ${
-          isOpen ? "p-2" : ""
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          isOpen ? "max-h-[500px] p-2" : "max-h-0 p-0"
         } ${itemsContainerClassName}`}
-        activeKey={isOpen ? ["1"] : []}
-        ghost
-        items={[
-          {
-            key: "1",
-            label: null,
-            children: (
-              <div className="flex flex-col gap-1 mt-2 !p-0">
-                {dataItems.map((item) => (
-                  <div
-                    key={item.key}
-                    style={{ color: textColor }}
-                    onClick={() => handleClick(item)}
-                    className="cursor-pointer px-3 py-2 rounded-md hover:bg-[#2c2c2c]"
-                  >
-                    {item.label}
-                  </div>
-                ))}
-              </div>
-            ),
-            showArrow: false,
-            className: "!p-0",
-          },
-        ]}
-      />
+      >
+        <div className="flex flex-col gap-1 mt-2 !p-0">
+          {dataItems.map((item) => (
+            <div
+              key={item.key}
+              style={{ color: textColor }}
+              onClick={() => handleClick(item)}
+              className="cursor-pointer px-3 py-2 rounded-md hover:bg-[#2c2c2c]"
+            >
+              {item.label}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

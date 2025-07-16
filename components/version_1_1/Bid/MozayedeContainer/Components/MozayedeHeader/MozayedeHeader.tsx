@@ -1,6 +1,6 @@
 // base
 import React, { FC, useRef, useState } from "react";
-import { FilterModal } from "./FilterModal/FilterModal";
+import { FilterModal } from "../../../../ui/popover";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Button from "@/components/version_1_1/ui/button";

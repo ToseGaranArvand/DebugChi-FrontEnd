@@ -1,11 +1,14 @@
 // base
+import { Tooltip } from "@heroui/react";
 import { FC } from "react";
 // lib
-import { Tooltip } from "antd";
 // core
-import { INormalAvatarGroupPropTypes } from "@/src/core/types/props/INormalAvatarGroupPropTypes";
-
-
+interface INormalAvatarGroupPropTypes {
+  children: React.ReactNode[];
+  maxCount?: number;
+  size?: number;
+  className?: string;
+}
 
 const NormalAvatarGroup: FC<INormalAvatarGroupPropTypes> = ({
   children,

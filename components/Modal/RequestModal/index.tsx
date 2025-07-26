@@ -1,5 +1,4 @@
 "use client"
-
 import { setShowRequest, showMoreRequest } from "@/redux/slices/globalSlice"
 import { type RootState, useAppDispatch, useAppSelector } from "@/redux/store/store"
 import { formatCurrency } from "@/utils/tools"
@@ -7,7 +6,6 @@ import { useState, useEffect } from "react"
 import { Clock, ListFilter, Tag, User } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button, Input } from "@heroui/react"
-import { socket } from "@/config/socket-config"
 
 type RequestType = "chat" | "audio" | "video"
 
@@ -38,8 +36,8 @@ const PriceBox = ({ price, type }: { price: number; type: RequestType }) => {
       <div className="flex-1 flex items-center justify-start h-full gap-2">
         <User size={48} />
         <div className="flex flex-col gap-2">
-          <span className="text-sm">{getTitle()}</span>
-          <span className="text-foreground-500 text-xs">به صرفه</span>
+          <span className="text-sm text-white">{getTitle()}</span>
+          <span className="text-gray-400 text-xs">به صرفه</span>
         </div>
       </div>
       <div className="w-auto h-full flex items-center justify-center">
@@ -61,18 +59,18 @@ const OptionRequest = ({
   return (
     <div className="w-full h-20 box-border rounded-lg grid grid-cols-2 gap-x-2">
       <div className="flex bg-[#2b2839] items-center justify-center rounded-lg">
-        <Button variant="ghost" className="flex gap-2" onClick={onMoreOptions}>
+        <Button variant="ghost" className="flex gap-2 text-white" onClick={onMoreOptions}>
           <ListFilter className="h-4 w-4" />
           گزینه های بیشتر
         </Button>
       </div>
       <div className="flex bg-[#2b2839] box-border px-4 items-center justify-center rounded-lg">
         <Input
-          className="border-b border-t-0 border-x-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="border-b border-t-0 border-x-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-white"
           placeholder="کد تخفیف"
           value={discountCode}
           onChange={(e) => setDiscountCode(e.target.value)}
-          startContent={<Tag className="h-4 w-4 mr-2" />}
+          startContent={<Tag className="h-4 w-4 mr-2 text-gray-400" />}
         />
       </div>
     </div>
@@ -90,16 +88,18 @@ const SubmitRequest = ({
 }) => {
   return (
     <div className="w-full h-20 gap-4 box-border rounded-lg flex items-center justify-center">
-      <Button variant="bordered" size="sm" isIconOnly startContent={
-        <Clock className="h-4 w-4" />
-
-      } className="bg-primary text-primary-foreground">
-      </Button>
+      <Button
+        variant="bordered"
+        size="sm"
+        isIconOnly
+        startContent={<Clock className="h-4 w-4" />}
+        className="bg-blue-500 text-white border-blue-500"
+      ></Button>
       <div className="flex-1 grid grid-cols-2 gap-4">
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/90" onPress={onSubmit}>
+        <Button className="bg-blue-500 text-white hover:bg-blue-600" onPress={onSubmit}>
           {requestMode}
         </Button>
-        <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onPress={close}>
+        <Button className="bg-red-500 text-white hover:bg-red-600" onPress={close}>
           لغو
         </Button>
       </div>
@@ -111,14 +111,12 @@ const RequestModal = () => {
   const { showRequest } = useAppSelector((state: RootState) => state.gloabal)
   const dispatch = useAppDispatch()
 
-  // Define prices for each request type
   const prices = {
     chat: 600000,
     audio: 500000,
     video: 400000,
   }
 
-  // State to track all form data
   const [requestData, setRequestData] = useState<RequestData>({
     type: "chat",
     price: prices.chat,
@@ -127,7 +125,6 @@ const RequestModal = () => {
     timestamp: new Date().toISOString(),
   })
 
-  // Update timestamp whenever form data changes
   useEffect(() => {
     setRequestData((prev) => ({
       ...prev,
@@ -135,19 +132,12 @@ const RequestModal = () => {
     }))
   }, [requestData.type, requestData.discountCode, requestData.moreOptions])
 
-  // Log the current state whenever it changes
   useEffect(() => {
-
-    
-
-
     console.log("Request Data:", requestData)
   }, [requestData])
 
   const closeHandler = () => {
-    // socket.emit("hello")
-    // Replace with a meaningful condition or remove if unnecessary
-    if (false) {     
+    if (false) {
       dispatch(setShowRequest(false))
     }
   }
@@ -176,12 +166,7 @@ const RequestModal = () => {
   }
 
   const handleSubmit = () => {
-    // Log the final data before submission
     console.log("Submitting request:", requestData)
-
-    // Here you can add API calls or other submission logic
-
-    // Close the modal after submission
     closeHandler()
   }
 
@@ -208,10 +193,16 @@ const RequestModal = () => {
       {showRequest && (
         <div className="flex w-2/4 flex-col mx-auto">
           <Tabs defaultValue="chat" className="w-full" onValueChange={handleTabChange} value={requestData.type}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="chat">چت</TabsTrigger>
-              <TabsTrigger value="audio">صوتی</TabsTrigger>
-              <TabsTrigger value="video">تصویری</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3 bg-gray-700">
+              <TabsTrigger value="chat" className="text-white data-[state=active]:bg-blue-500">
+                چت
+              </TabsTrigger>
+              <TabsTrigger value="audio" className="text-white data-[state=active]:bg-blue-500">
+                صوتی
+              </TabsTrigger>
+              <TabsTrigger value="video" className="text-white data-[state=active]:bg-blue-500">
+                تصویری
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="chat" className="flex flex-col gap-4">
               <PriceBox price={prices.chat} type="chat" />

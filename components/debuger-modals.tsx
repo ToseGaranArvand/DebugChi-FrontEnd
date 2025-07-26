@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Button,
@@ -13,9 +13,9 @@ import {
   Switch,
   Tab,
   Tabs,
-} from "@heroui/react"
-import { Headset, PhoneCall, Settings, Star, X } from "lucide-react"
-import Cookies from "js-cookie"
+} from "@heroui/react";
+import { Headset, PhoneCall, Settings, Star, X } from "lucide-react";
+import Cookies from "js-cookie";
 
 export const ModalSettings = ({
   setShow,
@@ -24,11 +24,11 @@ export const ModalSettings = ({
   onOpen,
   onOpenChange,
 }: {
-  setShow: (show: boolean) => void
-  show: boolean
-  isOpen: boolean
-  onOpen: () => void
-  onOpenChange: () => void
+  setShow: (show: boolean) => void;
+  show: boolean;
+  isOpen: boolean;
+  onOpen: () => void;
+  onOpenChange: () => void;
 }) => {
   return (
     <Modal
@@ -39,7 +39,7 @@ export const ModalSettings = ({
       backdrop="blur"
       dir="rtl"
       classNames={{
-        wrapper: "z-[10000]", 
+        wrapper: "z-[10000]",
         backdrop: "z-[10000]",
       }}
     >
@@ -57,8 +57,8 @@ export const ModalSettings = ({
                 color="danger"
                 variant="light"
                 onPress={() => {
-                  setShow(!show)
-                  onClose()
+                  setShow(!show);
+                  onClose();
                 }}
               ></Button>
             </ModalHeader>
@@ -69,8 +69,8 @@ export const ModalSettings = ({
         )}
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};
 
 export const ModalTask = ({
   setShow,
@@ -78,12 +78,14 @@ export const ModalTask = ({
   isOpen,
   onOpen,
   onOpenChange,
+  onFilterChange,
 }: {
-  setShow: (show: boolean) => void
-  show: boolean
-  isOpen: boolean
-  onOpen: () => void
-  onOpenChange: () => void
+  setShow: (show: boolean) => void;
+  show: boolean;
+  isOpen: boolean;
+  onOpen: () => void;
+  onOpenChange: () => void;
+  onFilterChange: () => void;
 }) => {
   return (
     <Modal
@@ -111,20 +113,20 @@ export const ModalTask = ({
                 color="danger"
                 variant="light"
                 onPress={() => {
-                  setShow(!show)
-                  onClose()
+                  setShow(!show);
+                  onClose();
                 }}
               ></Button>
             </ModalHeader>
             <ModalBody className="min-h-[500px] flex flex-col gap-4">
-              <TaskSettingsContent />
+              <TaskSettingsContent onFilterChange={onFilterChange} />
             </ModalBody>
           </>
         )}
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};
 
 export const SettingTabContent = () => {
   return (
@@ -141,7 +143,13 @@ export const SettingTabContent = () => {
               type="tel"
               value={"+989029457261"}
               variant="faded"
-              startContent={<Button startContent={<PhoneCall size={14} />} isIconOnly variant="light"></Button>}
+              startContent={
+                <Button
+                  startContent={<PhoneCall size={14} />}
+                  isIconOnly
+                  variant="light"
+                ></Button>
+              }
             />
           </div>
         </Tab>
@@ -150,51 +158,51 @@ export const SettingTabContent = () => {
           <Card>
             <CardBody className="flex flex-col gap-4">
               <p className="text-medium max-w-2xl mx-auto text-gray-500 font-mediumSans text-wrap text-right">
-                درباره ما ما یک تیم نرم‌افزاری هستیم که با هدف ساده‌سازی یادگیری و رفع مشکلات برنامه‌نویسی، پلتفرم
-                «دیباگچی» را توسعه داده‌ایم.
+                درباره ما ما یک تیم نرم‌افزاری هستیم که با هدف ساده‌سازی یادگیری و
+                رفع مشکلات برنامه‌نویسی، پلتفرم «دیباگچی» را توسعه داده‌ایم.
                 <br />
                 <br />
-                دیباگچی با بهره‌گیری از هوش مصنوعی، کاربران را در سریع‌ترین زمان ممکن به متخصصان واقعی در زمینه‌های مختلف
-                از جمله دیباگ، مشاوره، و کلاس‌های خصوصی یا عمومی متصل می‌کند.
+                دیباگچی با بهره‌گیری از هوش مصنوعی، کاربران را در سریع‌ترین زمان
+                ممکن به متخصصان واقعی در زمینه‌های مختلف از جمله دیباگ، مشاوره،
+                و کلاس‌های خصوصی یا عمومی متصل می‌کند.
                 <br />
                 <br />
-                هدف ما اینه که مسیر یادگیری و حل مسئله برای علاقه‌مندان و برنامه‌نویسان، ساده، سریع و موثر باشه.
+                هدف ما اینه که مسیر یادگیری و حل مسئله برای علاقه‌مندان و
+                برنامه‌نویسان، ساده، سریع و موثر باشه.
               </p>
             </CardBody>
           </Card>
         </Tab>
       </Tabs>
     </div>
-  )
-}
+  );
+};
 
-export const TaskSettingsContent = () => {
-  const is_debug = Cookies.get("debug")
-  const is_private_class = Cookies.get("private_class")
-  const is_moshavere = Cookies.get("moshavere")
-
-  const changeStatus = (type: "debug" | "private_class" | "moshavere", status: boolean) => {
-    if (type == "debug") {
-      Cookies.set("debug", String(status))
-    } else if (type == "moshavere") {
-      Cookies.set("moshavere", String(status))
-    } else if (type == "private_class") {
-      Cookies.set("private_class", String(status))
-    }
-  }
+export const TaskSettingsContent = ({
+  onFilterChange,
+}: {
+  onFilterChange: () => void;
+}) => {
+  const changeStatus = (
+    type: "debug" | "private_class" | "moshavere",
+    status: boolean
+  ) => {
+    Cookies.set(type, String(status));
+    onFilterChange();
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-4" dir="rtl">
       <Switch
-        defaultSelected={is_debug == "true"}
+        defaultSelected={Cookies.get("debug") == "true"}
         onValueChange={(value) => {
-          changeStatus("debug", value)
+          changeStatus("debug", value);
         }}
         classNames={{
           base: cn(
             "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
             "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-            "data-[selected=true]:border-primary",
+            "data-[selected=true]:border-primary"
           ),
           wrapper: "p-0 h-4 overflow-visible",
           thumb: cn(
@@ -202,25 +210,27 @@ export const TaskSettingsContent = () => {
             "group-data-[hover=true]:border-primary",
             "group-data-[selected=true]:ms-6",
             "group-data-[pressed=true]:w-7",
-            "group-data-[selected]:group-data-[pressed]:ms-4",
+            "group-data-[selected]:group-data-[pressed]:ms-4"
           ),
         }}
       >
         <div className="flex flex-col gap-1">
           <p className="text-medium">دیباگ</p>
-          <p className="text-tiny text-default-400">دریافت پیام دیباگ کردن درخواست ها و تسک ها</p>
+          <p className="text-tiny text-default-400">
+            دریافت پیام دیباگ کردن درخواست ها و تسک ها
+          </p>
         </div>
       </Switch>
       <Switch
-        defaultSelected={is_moshavere == "true"}
+        defaultSelected={Cookies.get("moshavere") == "true"}
         onValueChange={(value) => {
-          changeStatus("moshavere", value)
+          changeStatus("moshavere", value);
         }}
         classNames={{
           base: cn(
             "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
             "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-            "data-[selected=true]:border-primary",
+            "data-[selected=true]:border-primary"
           ),
           wrapper: "p-0 h-4 overflow-visible",
           thumb: cn(
@@ -228,25 +238,27 @@ export const TaskSettingsContent = () => {
             "group-data-[hover=true]:border-primary",
             "group-data-[selected=true]:ms-6",
             "group-data-[pressed=true]:w-7",
-            "group-data-[selected]:group-data-[pressed]:ms-4",
+            "group-data-[selected]:group-data-[pressed]:ms-4"
           ),
         }}
       >
         <div className="flex flex-col gap-1">
           <p className="text-medium">مشاوره</p>
-          <p className="text-tiny text-default-400">دریافت پیام مشاوره در زمینه درخواست ها و تسک ها</p>
+          <p className="text-tiny text-default-400">
+            دریافت پیام مشاوره در زمینه درخواست ها و تسک ها
+          </p>
         </div>
       </Switch>
       <Switch
-        defaultSelected={is_private_class == "true"}
+        defaultSelected={Cookies.get("private_class") == "true"}
         onValueChange={(value) => {
-          changeStatus("private_class", value)
+          changeStatus("private_class", value);
         }}
         classNames={{
           base: cn(
             "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
             "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-            "data-[selected=true]:border-primary",
+            "data-[selected=true]:border-primary"
           ),
           wrapper: "p-0 h-4 overflow-visible",
           thumb: cn(
@@ -254,15 +266,17 @@ export const TaskSettingsContent = () => {
             "group-data-[hover=true]:border-primary",
             "group-data-[selected=true]:ms-6",
             "group-data-[pressed=true]:w-7",
-            "group-data-[selected]:group-data-[pressed]:ms-4",
+            "group-data-[selected]:group-data-[pressed]:ms-4"
           ),
         }}
       >
         <div className="flex flex-col gap-1">
           <p className="text-medium">کلاس خصوصی</p>
-          <p className="text-tiny text-default-400">دریافت پیام کلاس خصوصی در زمینه درخواست ها و تسک ها</p>
+          <p className="text-tiny text-default-400">
+            دریافت پیام کلاس خصوصی در زمینه درخواست ها و تسک ها
+          </p>
         </div>
       </Switch>
     </div>
-  )
-}
+  );
+};

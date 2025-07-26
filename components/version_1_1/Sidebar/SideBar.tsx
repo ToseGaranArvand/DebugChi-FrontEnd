@@ -130,44 +130,42 @@ type Props = {};
 const SidebarBody = (props: Props) => {
   const pathname = usePathname();
 
-  useEffect(()=>{
-    socket.on('connect',()=>{
-      console.log("connected",socket.id)
-    })
-  })
-
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("connected", socket.id);
+    });
+  });
 
   return (
     <div className="w-full flex-1 flex items-center flex-col justify-center py-4 box-border gap-4">
       <div className="flex flex-col max-sm:flex-row h-auto border p-2 rounded-full border-default-200 dark:border-default-100 bg-default-100 dark:bg-default-50 gap-4">
+        {linkData.map((item, index) => {
+          const isActive =
+            item.path === pathname ||
+            (item.path.startsWith("/community") &&
+              pathname.startsWith("/community"));
 
-      {linkData.map((item, index) => {
-        const isActive =
-          item.path === pathname ||
-          (item.path.startsWith("/community") &&
-            pathname.startsWith("/community"));
-
-        return (
-          <Tooltip content={item.name} placement="right" key={index}>
-            <Link href={item.path}>
-              <Button
-                className={`${
-                  isActive ? "scale-110 bg-black text-background dark:text-foreground" : ""
-                } hover:scale-125 transition-all  duration-500 ease-in-out`}
-                variant={"light"}
-                name={item.name}
-                isIconOnly
-                radius="full"
-                
-                startContent={<item.icon size={24} />}
-                size="lg"
-              ></Button>
-            </Link>
-          </Tooltip>
-        );
-      })}
+          return (
+            <Tooltip content={item.name} placement="right" key={index}>
+              <Link href={item.path}>
+                <Button
+                  className={`${
+                    isActive
+                      ? "scale-110 bg-black text-background dark:text-foreground"
+                      : ""
+                  } hover:scale-125 transition-all  duration-500 ease-in-out`}
+                  variant={"light"}
+                  name={item.name}
+                  isIconOnly
+                  radius="full"
+                  startContent={<item.icon size={24} />}
+                  size="lg"
+                ></Button>
+              </Link>
+            </Tooltip>
+          );
+        })}
       </div>
-
     </div>
   );
 };

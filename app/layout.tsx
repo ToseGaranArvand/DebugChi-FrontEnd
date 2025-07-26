@@ -5,6 +5,7 @@ import ClientProvider from "./clientProvider";
 import Header from "@/components/Layout/Header";
 import { NavigationProgress } from "@/components/Tools/NavigationProgress";
 import { ToastProvider } from "@heroui/react";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,19 +33,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-        <head>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-    />
-  </head>
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased mx-auto`}
       >
         <NavigationProgress />
         <ClientProvider>
           <ToastProvider placement="top-center" />
-          {children}
+          <AuthProvider>{children}</AuthProvider>
 
           {/* <Toaster position="top-center" richColors /> */}
         </ClientProvider>

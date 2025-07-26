@@ -96,53 +96,43 @@ import Sidebar from "@/components/version_1_1/Sidebar";
 import SidebarBody from "@/components/version_1_1/Sidebar/SideBar";
 import SidebarFooter from "@/components/version_1_1/Sidebar/sidebar-footer";
 import BackgroundGlobalGradient from "@/components/version_1_1/ui/backgorund-gradiant-global";
-import UserDashboard from "@/components/version_1_1/User/UserDashboard";
+import ProfileEdit from "@/components/version_1_1/User/Edit/ProfileEdit";
+import UserDashboardEdit from "@/components/version_1_1/User/Edit/UserDashboardEdit";
 import Wallet from "@/components/version_1_1/User/Wallet";
 import { UserInfoProvider } from "@/context/userContext";
 import { perform_get } from "@/lib/api";
 import { cookies } from "next/headers";
 import React from "react";
 
-type Props = {};
-
-const page = async ({ params }: any) => {
+const page = async () => {
   const token = (await cookies()).get("token")?.value;
   const response = await perform_get("auths/user_info/", token);
-  const posts = await perform_get("api/v1/get_post/", token);
 
-  if (response.status == 401) {
-    return (
-      <div className="flex items-center justify-center w-full h-screen">
-        کاربر پیدا نشد
-      </div>
-    );
-  } else {
-    return (
-      <main className="w-screen h-screen overflow-hidden flex">
-        <Sidebar>
-          <SidebarBody />
-          <SidebarFooter user={response} token={token} />
-        </Sidebar>
-        <div
-          dir="rtl"
-          className="relative mx-auto flex h-full box-border py-5 px-4 gap-4"
-        >
-          <BackgroundGlobalGradient />
-          <div className="h-full">
-            <UserInfoProvider>
-              <Wallet user={response} />
-            </UserInfoProvider>
-          </div>
-          <div
-            className="bg-[gradient-to-bl from-c_background/50 to-c_background/40] flex flex-col rounded-3xl flex-1 w-full box-border relative"
-            dir="rtl"
-          >
-            <UserDashboard />
-          </div>
+  return (
+    <main className="w-screen h-screen overflow-hidden flex">
+      <Sidebar>
+        <SidebarBody />
+        <SidebarFooter user={response} token={token} />
+      </Sidebar>
+      <div
+        dir="rtl"
+        className="relative mx-auto flex h-full box-border py-5 px-4 gap-4"
+      >
+        <BackgroundGlobalGradient />
+        <div className="h-full">
+          <UserInfoProvider>
+            <Wallet user={response} />
+          </UserInfoProvider>
         </div>
-      </main>
-    );
-  }
+        <div
+          className="bg-[gradient-to-bl from-c_background/50 to-c_background/40] flex flex-col rounded-3xl flex-1 w-full box-border relative"
+          dir="rtl"
+        >
+          <UserDashboardEdit />
+        </div>
+      </div>
+    </main>
+  );
 };
 
 export default page;

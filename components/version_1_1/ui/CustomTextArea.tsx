@@ -6,7 +6,7 @@ interface ICustomTextAreaPropTypes {
   placeHolder?: string;
   error?: string;
   value: string;
-  handleInputChange: (field: string, value: string) => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   field: string;
   rows?: number;
   id?: string;
@@ -39,7 +39,7 @@ const CustomTextArea: React.FC<ICustomTextAreaPropTypes> = ({
           } as React.CSSProperties
         }
         value={value}
-        onChange={(e) => handleInputChange(field, e.target.value)}
+        onChange={handleInputChange}
       />
       {error && (
         <p className="mt-1 text-xs text-red-500 font-medium">{error}</p>

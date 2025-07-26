@@ -55,3 +55,63 @@
 .ant-segmented-thumb {
   background: #252328 !important;
 }
+/* ------------- Full Date Picker -------------------- */
+/* common */
+.userDashboardEditDatePicker .rmdp-container,
+.walletVerifySectionDatePicker .rmdp-container {
+  width: 100% !important;
+}
+.errorUserDashboardEditDatePicker .rmdp-input,
+.errorWalletVerifySectionDatePicker .rmdp-input {
+  border: 1px solid #ef4444 !important;
+}
+.userDashboardEditDatePicker .rmdp-input,
+.walletVerifySectionDatePicker .rmdp-input {
+  width: 100% !important;
+  margin: 0 !important;
+  padding-right: 15px;
+  font-size: 14px;
+}
+.userDashboardEditDatePicker .b-deselect,
+.walletVerifySectionDatePicker .b-deselect {
+  padding-right: 5px;
+  margin-left: -5px;
+  font-size: 14px !important;
+}
+.userDashboardEditDatePicker .rmdp-input::placeholder,
+.walletVerifySectionDatePicker .rmdp-input::placeholder {
+  font-size: 14px;
+}
+
+/* userDashboardEdit */
+.userDashboardEditDatePicker .rmdp-input {
+  height: 50px !important;
+  border: 1px solid #6e6e6e57;
+  background: transparent;
+  border-radius: 14px;
+  color: #797979;
+}
+.userDashboardEditDatePicker .rmdp-input:focus {
+  border: none !important;
+}
+.userDashboardEditDatePicker .rmdp-input::placeholder {
+  color: #797979;
+}
+
+/* walletVerifySection */
+.walletVerifySectionDatePicker .rmdp-input {
+  height: 60px !important;
+  border: none;
+  background: #18151e;
+
+  font-family: iranLight !important;
+  border-radius: 20px;
+  color: #545160;
+}
+.walletVerifySectionDatePicker .b-deselect {
+  font-family: iranLight !important;
+}
+.walletVerifySectionDatePicker .rmdp-input::placeholder {
+  font-family: iranLight !important;
+  color: #545160;
+}

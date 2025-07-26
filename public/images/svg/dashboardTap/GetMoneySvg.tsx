@@ -17,7 +17,7 @@ const GetMoneySvg = () => {
           height="18.4604"
           rx="3.25"
           stroke="#E1E1E1"
-          stroke-width="1.5"
+          strokeWidth="1.5"
         />
       </svg>
       <div className="absolute top-0 left-0 pl-1.5 pt-1.5">
@@ -31,9 +31,9 @@ const GetMoneySvg = () => {
           <path
             d="M4.55413 7.78223L4.55413 1.12876M4.55413 1.12876L1.22739 4.45549M4.55413 1.12876L7.88086 4.45549"
             stroke="#85BA00"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </div>

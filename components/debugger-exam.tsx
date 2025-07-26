@@ -19,10 +19,10 @@ interface UserAnswer {
 }
 
 interface DebuggerExamProps {
-  token: string;
+  token?: string;
 }
 
-export default function DebuggerExam({ token }: DebuggerExamProps) {
+export default function  DebuggerExam({ token }: DebuggerExamProps) {
   // State های اصلی آزمون
   const [examStarted, setExamStarted] = useState(false);
   const [examFinished, setExamFinished] = useState(false);

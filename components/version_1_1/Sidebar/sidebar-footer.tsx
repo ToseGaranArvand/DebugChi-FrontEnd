@@ -45,7 +45,7 @@ const SidebarFooter = ({ user, token }: Props) => {
         ></Button>
       </Tooltip> */}
 
-      <ThemeSwitcher />
+      {/* <ThemeSwitcher /> */}
       {userData ? (
         <Tooltip
           placement="right"

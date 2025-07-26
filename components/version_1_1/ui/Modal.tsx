@@ -12,13 +12,14 @@ interface CustomModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onOpen: () => void;
-  btnText: string;
+  btnText?: string;
   btnClassName?: string;
   modalHeaderClassname?: string;
   modalHeader?: React.ReactNode;
   children?: React.ReactNode;
   modalFooter?: React.ReactNode;
   hideCloseButton?: boolean;
+  hideOpenButton?: boolean;
 }
 
 const CustomModal: FC<CustomModalProps> = ({
@@ -32,12 +33,16 @@ const CustomModal: FC<CustomModalProps> = ({
   children,
   modalFooter,
   hideCloseButton = true,
+  hideOpenButton = false,
 }) => {
   return (
     <>
-      <Button className={btnClassName} onPress={onOpen}>
-        {btnText}
-      </Button>
+      {!hideOpenButton && (
+        <Button className={btnClassName} onPress={onOpen}>
+          {btnText}
+        </Button>
+      )}
+
       <Modal
         className="shadow-none"
         isOpen={isOpen}

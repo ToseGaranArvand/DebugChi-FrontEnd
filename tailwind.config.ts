@@ -147,6 +147,7 @@ const config = {
         iranNumMedium: ["iranNumMedium", "sans-serif"],
         iranNumUltraLight: ["iranNumUltraLight", "sans-serif"],
         iranNumBold: ["iranNumBold", "sans-serif"],
+        iranNumRegular: ["iranNumRegular", "sans-serif"],
         yekan: ["yekan", "sans-serif"],
       },
       animation: {

@@ -54,7 +54,12 @@ const AddNewMozayedeContanier = () => {
         <CustomUploadBox className="h-[164px] border border-[#6E6E6E] bg-[#1C1C1C80] rounded-[20px] cursor-pointer">
           <div className="rounded-2xl p-8 text-center">
             <div className="max-w-[288px] w-full !h-[43px] mx-auto mb-4 border border-dashed border-[#272727] flex items-center justify-center rounded-xl">
-              <Image src="/images/svg/UploadSvg.svg" alt="" width={40} height={40}/>
+              <Image
+                src="/images/svg/UploadSvg.svg"
+                alt=""
+                width={40}
+                height={40}
+              />
             </div>
             <p className="mt-[35px] text-[#3D3D3D] text-[10px]">
               یک بنر برای مزایده خود بارگذاری کنید
@@ -147,7 +152,6 @@ const AddNewMozayedeContanier = () => {
             render={({ field }) => (
               <CustomInput
                 containerClassName="h-[50px]"
-                labelClassName="border-none pr-[26px]"
                 labelTitle="تعداد جلسات"
                 field="sessionsCount"
                 error={errors.sessionsCount?.message}
@@ -194,9 +198,7 @@ const AddNewMozayedeContanier = () => {
                 field="classDescription"
                 value={field.value}
                 error={errors.classDescription?.message}
-                handleInputChange={(fieldName: any, value: any) =>
-                  field.onChange(value)
-                }
+                handleInputChange={field.onChange}
               />
             )}
           />

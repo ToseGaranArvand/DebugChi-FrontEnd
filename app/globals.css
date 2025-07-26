@@ -85,6 +85,10 @@
   src: url("/fonts/IranSans/IRANSansXFaNum-Bold.ttf") format("truetype");
 }
 @font-face {
+  font-family: "iranNumRegular";
+  src: url("/fonts/IranSans/IRANSansXFaNum-Regular.ttf") format("truetype");
+}
+@font-face {
   font-family: "yekan";
   src: url("/fonts/IranSans/yekanRegular.woff") format("truetype");
 }

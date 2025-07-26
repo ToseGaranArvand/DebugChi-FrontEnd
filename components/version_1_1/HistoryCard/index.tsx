@@ -37,7 +37,7 @@ const HistoryCard = (props: Props) => {
   return (
     <div className="h-96 bg-c_background/50 rounded-2xl flex flex-col">
       <div className="h-48 box-border px-4 flex items-center justify-center  overflow-hidden rounded-tr-2xl rounded-tl-2xl ">
-        <AnimatedTooltip items={people} />
+        {/* <AnimatedTooltip items={people} /> */}
       </div>
       <div className="flex flex-col box-border px-4 gap-4 ">
         {props.data.mode === "chat" && (

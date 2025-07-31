@@ -73,12 +73,12 @@ const Answers = (props: Props) => {
     });
   };
 
-  // Remove a custom answer
+ 
   const removeCustomAnswer = (
     answerToRemove: string,
     event: React.MouseEvent
   ) => {
-    event.stopPropagation(); // Prevent button click event from triggering
+    event.stopPropagation(); 
     setCustomAnswerList((prev) =>
       prev.filter((item) => item !== answerToRemove)
     );
@@ -223,7 +223,7 @@ const Answers = (props: Props) => {
                                 ...prev,
                                 newAnswer,
                               ]);
-                              setNewAnswer(""); // Clear input after adding
+                              setNewAnswer(""); 
                             }
                           }}
                         >
@@ -260,7 +260,7 @@ const Answers = (props: Props) => {
                   >
                     ادامه دادن
                   </Button>
-                  {/* <Button onPress={() => console.log(filter)}>press</Button> */}
+                
                 </div>
               ) : (
                 <div className="flex w-full h-full items-center justify-center">

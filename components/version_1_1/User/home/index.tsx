@@ -50,60 +50,63 @@ import TicketsTracking from "./TicketsTracking";
 import { useAppSelector } from "@/redux/store/store";
 
 interface Props {
-  user: any
-  faq: any
-  containerWidth?: number
+  user: any;
+  faq: any;
+  containerWidth?: number;
 }
 
-
-
-
-
-
-
-
 export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
-  const [selectedTab, setSelectedTab] = useState<string>("home")
-  const { showNewRequest } = useAppSelector((state: any) => state.gloabal)
-  const [showSettings, setShowSettings] = useState(false)
-  const [showTask, setShowTask] = useState(false)
-  const settingsDisclosure = useDisclosure()
-  const taskDisclosure = useDisclosure()
+  const [selectedTab, setSelectedTab] = useState<string>("home");
+  const { showNewRequest } = useAppSelector((state: any) => state.gloabal);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showTask, setShowTask] = useState(false);
+  const settingsDisclosure = useDisclosure();
+  const taskDisclosure = useDisclosure();
+
+
+  const [taskRefreshKey, setTaskRefreshKey] = useState(0);
+
+  const handleFilterChange = () => {
+    setTaskRefreshKey((prevKey) => prevKey + 1);
+  };
+  
 
   const handleSettingsClick = () => {
-    settingsDisclosure.onOpen()
-    setShowSettings(true)
-  }
+    settingsDisclosure.onOpen();
+    setShowSettings(true);
+  };
 
   const handleSupportClick = () => {
-    taskDisclosure.onOpen()
-    setShowTask(true)
-  }
+    taskDisclosure.onOpen();
+    setShowTask(true);
+  };
 
   return (
     <>
-     
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
-
         .custom-scrollbar::-webkit-scrollbar-track {
           background: rgba(31, 31, 31, 0.5);
           border-radius: 10px;
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, rgba(14, 229, 32, 0.5) 0%, rgba(0, 156, 255, 0.5) 100%);
+          background: linear-gradient(
+            180deg,
+            rgba(14, 229, 32, 0.5) 0%,
+            rgba(0, 156, 255, 0.5) 100%
+          );
           border-radius: 10px;
           transition: all 0.3s ease;
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(180deg, rgba(14, 229, 32, 0.8) 0%, rgba(0, 156, 255, 0.8) 100%);
+          background: linear-gradient(
+            180deg,
+            rgba(14, 229, 32, 0.8) 0%,
+            rgba(0, 156, 255, 0.8) 100%
+          );
         }
-
-       
         .custom-scrollbar {
           scrollbar-width: thin;
           scrollbar-color: rgba(14, 229, 32, 0.5) rgba(31, 31, 31, 0.5);
@@ -112,10 +115,8 @@ export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
       `}</style>
 
       <div className="flex flex-col w-full h-full overflow-hidden">
-      
         <div className="bg-[#0F0F0F] w-full flex-shrink-0">
           <div className="flex justify-between items-center h-20 px-4">
-          
             <Tabs
               aria-label="Tabs variants"
               variant="underlined"
@@ -134,8 +135,6 @@ export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
               <Tab key="History" title="تاریخچه" />
               <Tab key="Rate" title="رتبه" />
             </Tabs>
-
-           
             <div className="flex gap-6">
               <button
                 onClick={handleSupportClick}
@@ -151,8 +150,6 @@ export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
               </button>
             </div>
           </div>
-
-         
           <div
             className="w-full h-[0.5px]"
             style={{
@@ -164,15 +161,11 @@ export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
           ></div>
         </div>
 
-     
         <div className="flex-1 overflow-hidden">
           {selectedTab === "home" && (
             <div className="h-full flex justify-center items-start py-5 overflow-hidden">
-            
               <div className="w-[90%] h-[calc(100%-10px)] bg-[#1F1F1F] rounded-2xl overflow-hidden flex flex-col">
-               
                 <div className="flex-1 p-4 custom-scrollbar overflow-y-auto">
-              
                   <div
                     className={`transition-all duration-500 ease-in-out ${
                       showNewRequest
@@ -180,10 +173,8 @@ export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
                         : "opacity-0 translate-y-4 scale-95 pointer-events-none absolute"
                     }`}
                   >
-                    <NewRequestIncoming />
+                    <NewRequestIncoming key={taskRefreshKey} />
                   </div>
-
-                
                   <div
                     className={`flex items-center justify-center h-full transition-all duration-500 ease-in-out ${
                       !showNewRequest
@@ -194,7 +185,9 @@ export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
                     <div className="text-center text-gray-400">
                       <div className="text-2xl mb-2">📴</div>
                       <p className="text-lg">شما آفلاین هستید</p>
-                      <p className="text-sm mt-1">برای دریافت درخواست‌ها آنلاین شوید</p>
+                      <p className="text-sm mt-1">
+                        برای دریافت درخواست‌ها آنلاین شوید
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -236,9 +229,10 @@ export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
         </div>
       </div>
 
-      {selectedTab === "home" && <OnlineAction containerWidth={containerWidth} />}
+      {selectedTab === "home" && (
+        <OnlineAction containerWidth={containerWidth} />
+      )}
 
-   
       <ModalSettings
         setShow={setShowSettings}
         show={showSettings}
@@ -253,10 +247,11 @@ export const DebugerHome = ({ user, faq, containerWidth }: Props) => {
         isOpen={taskDisclosure.isOpen}
         onOpen={taskDisclosure.onOpen}
         onOpenChange={taskDisclosure.onOpenChange}
+        onFilterChange={handleFilterChange}
       />
     </>
-  )
-}
+  );
+};
 
 const FilterDropDown = () => {
   const [selectedKey, setSelectedKey] = React.useState("همه");
@@ -297,39 +292,6 @@ const NotificationActitvities = () => {
   return (
     <div className=" w-full rounded-xl box-border overflow-y-auto ">
       <ChatList />
-      {/* <Card className="mb-2" radius="sm">
-        <CardHeader className="flex gap-2">
-          <Button
-            radius="full"
-            startContent={<MoveDownLeft />}
-            variant="flat"
-            isDisabled
-            color="success"
-            isIconOnly
-          ></Button>
-          <span className="text-lime-500">+ 200,000</span>
-          <div className="flex-1"></div>
-          <Chip size="md" variant="flat" color="success" className="text-xs">
-            موفق
-          </Chip>
-        </CardHeader>
-        <CardBody className="flex mb-5">
-          <span className="text-xs">واریز به حساب شما</span>
-        </CardBody>
-
-        <CardFooter>
-          <span className="text-xs text-foreground-500">
-            {new Date().toLocaleDateString("fa-IR", {
-              year: "numeric",
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </span>
-        </CardFooter>
-      </Card> */}
     </div>
   );
 };
@@ -496,13 +458,10 @@ export const RankTab = ({ user }: { user: Main }) => {
   return (
     <div className="min-h-[600px] text-white">
       <div className="max-w-4xl mx-auto px-4 py-6 flex flex-col gap-4">
-        {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <div></div>
-          {/* <ChevronLeft className="text-white" /> */}
         </div>
 
-        {/* Rating Header */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold mb-2">
             {total == 0 && "نظری ثبت نشده"}
@@ -512,7 +471,6 @@ export const RankTab = ({ user }: { user: Main }) => {
           </div>
         </div>
 
-        {/* Rating Distribution */}
         <div className="bg-[#252a32] flex flex-col gap-3 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
@@ -599,9 +557,6 @@ export const RankTab = ({ user }: { user: Main }) => {
           </div>
         </div>
 
-        {/* Medals Section */}
-
-        {/* Popular Choices */}
         <div className="mb-6">
           <h2 className="font-bold text-lg mb-4">
             :پرتکرارترین گزینه‌های انتخابی کاربرا
@@ -625,8 +580,6 @@ export const RankTab = ({ user }: { user: Main }) => {
             </div>
           )}
         </div>
-
-        {/* Comments Section */}
       </div>
     </div>
   );

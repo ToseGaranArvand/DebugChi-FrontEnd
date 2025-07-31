@@ -48,9 +48,7 @@ export default function Login() {
   const path = usePathname();
   const router = useRouter();
 
-  // const query = useSearchParams();
-  // const [selected, setSelected] = useState<string>("specialist")
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "" })
   const [error, setError] = useState({
     username: "",
     password: "",
@@ -67,14 +65,13 @@ export default function Login() {
   }, [login]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    // console.log(selected, data)
-    e.preventDefault();
-    setIsLoading(true);
+    const data = Object.fromEntries(new FormData(e.currentTarget))
+    e.preventDefault()
+    setIsLoading(true)
 
-    Cookies.remove("token");
-    const token = Cookies.get("token");
-    const response = await perform_post("auths/login/", { ...data });
+    Cookies.remove("token")
+    const token = Cookies.get('token');
+    const response = await perform_post("auths/login/", { ...data});
 
     console.log(response);
     if (response.success && response.user) {
@@ -105,10 +102,12 @@ export default function Login() {
       }}
       onOpenChange={onOpenChange}
     >
-      <DrawerContent className="relative overflow-hidden">
+      <DrawerContent className="relative overflow-hidden" style={{ background: 'rgba(0, 0, 0, .99)' }}>
         {(onClose) => (
           <>
             <BackgroundGlobalGradient />
+            
+            {/* Close button */}
             <Button
               endContent={<ArrowLeft size={28} />}
               variant="light"
@@ -118,15 +117,17 @@ export default function Login() {
                 dispatch(showLogin({ show: false, path: "" }));
                 onClose();
               }}
-              className="absolute left-4 top-2"
-            ></Button>
-            <DrawerBody className="h-screen">
-              <div className="flex flex-col items-center justify-center h-full w-full ">
-                <Card className="min-w-[500px] max-w-[600px] h-3/4 border border-default-100 bg-bg_card">
+              className="absolute left-4 top-2 z-50"
+            />
+            
+            {/* Main content */}
+            <DrawerBody className="h-screen relative z-10">
+              <div className="flex flex-col items-center justify-center h-full w-full">
+                <Card className="min-w-[500px] max-w-[600px] h-3/4 border border-default-100 bg-bg_card relative z-20">
                   <CardBody className="overflow-hidden">
                     <motion.div className="rounded-2xl w-full h-full flex items-center justify-center">
                       <Form
-                        className="w-full flex flex-col min-h-[500px] items-center justify-center  px-5 rounded-lg"
+                        className="w-full flex flex-col min-h-[500px] items-center justify-center px-5 rounded-lg"
                         onSubmit={handleSubmit}
                       >
                         <Input
@@ -156,30 +157,24 @@ export default function Login() {
                             autoComplete="current-password"
                             validate={(value) => {
                               if (value.length < 8) {
-                                return "حداقل 8 کاراکتر باید وارد کنید";
+                                return "حداقل 8 کاراکتر باید وارد کنید"
                               }
                             }}
                           />
 
                           <button
                             type="button"
-                            onClick={() =>
-                              setShowPasswordCustomer(!showPasswordCustomer)
-                            }
+                            onClick={() => setShowPasswordCustomer(!showPasswordCustomer)}
                             className="absolute left-3 top-[38px] focus:outline-none"
                             style={{
                               background: "transparent",
                               border: "none",
                               cursor: "pointer",
                               zIndex: 10,
-                              top: "2.5rem",
+                              top: "2.5rem", 
                               left: "1rem",
                             }}
-                            aria-label={
-                              showPasswordCustomer
-                                ? "پنهان کردن رمز عبور"
-                                : "نمایش رمز عبور"
-                            }
+                            aria-label={showPasswordCustomer ? "پنهان کردن رمز عبور" : "نمایش رمز عبور"}
                           >
                             {showPasswordCustomer ? (
                               <EyeOff size={20} className="text-gray-400" />
@@ -196,8 +191,8 @@ export default function Login() {
                             href={"/auth/forget-password/"}
                             className="text-tiny text-blue-500 underline"
                             onPress={() => {
-                              dispatch(showLogin({ show: false, path: "" }));
-                              onClose();
+                              dispatch(showLogin({ show: false, path: "" }))
+                              onClose()
                             }}
                           >
                             بازیابی کلمه عبور؟
@@ -228,8 +223,8 @@ export default function Login() {
                             variant="faded"
                             size="lg"
                             onPress={() => {
-                              onClose();
-                              dispatch(showSignUp({ show: true, path: "" }));
+                              onClose()
+                              dispatch(showSignUp({ show: true, path: "" }))
                             }}
                           >
                             ثبت نام
@@ -237,12 +232,7 @@ export default function Login() {
                         </div>
                         <div className="w-full">
                           {error.server && (
-                            <Alert
-                              className="text-right"
-                              variant="flat"
-                              color="danger"
-                              title={error.server}
-                            />
+                            <Alert className="text-right" variant="flat" color="danger" title={error.server} />
                           )}
                         </div>
                       </Form>

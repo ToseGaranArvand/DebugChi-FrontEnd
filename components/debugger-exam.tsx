@@ -22,18 +22,18 @@ interface DebuggerExamProps {
   token?: string;
 }
 
-export default function  DebuggerExam({ token }: DebuggerExamProps) {
-  // State های اصلی آزمون
-  const [examStarted, setExamStarted] = useState(false);
-  const [examFinished, setExamFinished] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [timeLeft, setTimeLeft] = useState(40);
-  const [questions, setQuestions] = useState<ExamQuestion[]>([]);
-  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [examResult, setExamResult] = useState<boolean | null>(null);
-  const [isCheckingResult, setIsCheckingResult] = useState(false);
+export default function DebuggerExam({ token }: DebuggerExamProps) {
+ 
+  const [examStarted, setExamStarted] = useState(false)
+  const [examFinished, setExamFinished] = useState(false)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [selectedOption, setSelectedOption] = useState<number | null>(null)
+  const [timeLeft, setTimeLeft] = useState(40)
+  const [questions, setQuestions] = useState<ExamQuestion[]>([])
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
+  const [loading, setLoading] = useState(false)
+  const [examResult, setExamResult] = useState<boolean | null>(null)
+  const [isCheckingResult, setIsCheckingResult] = useState(false)
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const currentQuestion = questions[currentQuestionIndex];

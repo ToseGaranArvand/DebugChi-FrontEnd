@@ -6,12 +6,7 @@ import * as React from "react";
 import FindUser from "@/components/version_1_1/FindUser";
 import { cookies } from "next/headers";
 import { perform_get } from "@/lib/api";
-import {
-  DebugerHome,
-  DebugerRequest,
-} from "@/components/version_1_1/User/home";
 import clientPromise from "@/lib/mongodb";
-import { RequestFilterProvider } from "@/context/RequetsFilterProvider";
 import AiQuestion from "@/components/version_1_1/AiQuestions";
 import Answers from "@/components/version_1_1/AiQuestions/Answers";
 import { AnswerProvider } from "@/context/AiContextAnswer";

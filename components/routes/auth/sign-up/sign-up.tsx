@@ -47,7 +47,7 @@ export default function SignUp() {
       }}
       onOpenChange={onOpenChange}
     >
-      <DrawerContent className="relative overflow-hidden">
+       <DrawerContent className="relative overflow-hidden" style={{ background: 'rgba(0, 0, 0, .99)' }}>
         {(onClose) => (
           <>
             <BackgroundGlobalGradient />

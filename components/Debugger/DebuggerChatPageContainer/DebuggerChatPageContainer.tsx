@@ -10,14 +10,17 @@ import SidebarBody from "@/components/version_1_1/Sidebar/SideBar";
 import SidebarFooter from "@/components/version_1_1/Sidebar/sidebar-footer";
 import { RequestFilterProvider } from "@/context/RequetsFilterProvider";
 import { perform_get } from "@/lib/api";
-import { cookies } from "next/headers";
 import React from "react";
 
-const page = async ({ params }: any) => {
-  const token = (await cookies()).get("token")?.value;
-  const { uuid } = await params;
+const DebuggerChatPageContainer = async ({
+  token,
+  id,
+}: {
+  token: string;
+  id: string;
+}) => {
   const response = await perform_get(
-    `api/v1/debug/get-session-info/${uuid}`,
+    `api/v1/debug/get-session-info/${id}`,
     token
   );
 
@@ -27,16 +30,12 @@ const page = async ({ params }: any) => {
 
   return (
     <main className="w-full h-screen flex">
-      <Sidebar>
-        <SidebarBody />
-        <SidebarFooter token={token} />
-      </Sidebar>
       <div className="flex-1 flex  h-full box-border p-5 gap-4">
-        <div className="bg-foreground-100 rounded-3xl h-full overflow-y-auto w-96">
+        {/* <div className="bg-foreground-100 rounded-3xl h-full overflow-y-auto w-96">
           <RequestFilterProvider>
             {response.is_debuger ? <ChatList /> : <UserNormalChatList />}
           </RequestFilterProvider>
-        </div>
+        </div> */}
         <div className="bg-foreground-100 flex flex-col rounded-3xl flex-1 w-full relative">
           <RequestModal />
           <MoreRequest />
@@ -85,4 +84,4 @@ const page = async ({ params }: any) => {
   );
 };
 
-export default page;
+export { DebuggerChatPageContainer };

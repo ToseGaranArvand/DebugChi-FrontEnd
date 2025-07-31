@@ -1,25 +1,162 @@
 "use client";
-import { Button } from "@heroui/react";
-import { useEffect, useState } from "react";
+
 import type {
   Main,
   PendingConsult,
   PendingDebug,
 } from "@/components/types/incomingRequest";
-import Cookies from "js-cookie";
+import { RootState, useAppDispatch, useAppSelector } from "@/redux/store/store";
 import { formatCurrency } from "@/utils/tools";
 import { useRouter } from "next/navigation";
-import {
-  type RootState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/redux/store/store";
+import React, { FC, useState, useEffect } from "react";
 import { setShowNewRequest } from "@/redux/slices/globalSlice";
-import { perform_get } from "@/lib/api";
+import Cookies from "js-cookie";
+import ClassActivities from "@/components/version_1_1/User/home/ClassActivity";
+import TicketsTracking from "@/components/version_1_1/User/home/TicketsTracking";
+import { ModalSettings, ModalTask } from "@/components/debuger-modals";
+import { Button, Chip, Tab, Tabs, useDisclosure } from "@heroui/react";
 
-type Props = {};
+import { RankTab, SupportFAQ } from "@/components/version_1_1/User/home";
+import { GetUserActivityHistoryTab } from "@/components/version_1_1/User/TabsData";
+import OnlineAction from "@/components/version_1_1/User/OnlineAction";
 
-const NewRequestIncoming = (props: Props) => {
+interface IDebuggerHomePageContainer {
+  response: any;
+  serializedFaq: any;
+}
+
+const DebuggerHomePageContainer: FC<IDebuggerHomePageContainer> = ({
+  response,
+  serializedFaq,
+}) => {
+  const [containerWidth, setContainerWidth] = React.useState<number>(720);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const updateContainerWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth);
+      }
+    };
+
+    updateContainerWidth();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateContainerWidth();
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+  return (
+    <>
+      <div
+        ref={containerRef}
+        className="flex-1 flex flex-col h-full bg-[#0F0F0F] rounded-2xl relative overflow-hidden"
+      >
+        <section className="flex-1 overflow-hidden">
+          <DebugerHome
+            user={response}
+            faq={serializedFaq}
+            containerWidth={containerWidth}
+          />
+        </section>
+      </div>
+    </>
+  );
+};
+
+export { DebuggerHomePageContainer };
+
+interface DebugerHomeProps {
+  user: any;
+  faq: any;
+  containerWidth?: number;
+}
+const DebugerHome = ({ user, faq, containerWidth }: DebugerHomeProps) => {
+  const { showNewRequest } = useAppSelector((state: any) => state.gloabal);
+
+  return (
+    <>
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(31, 31, 31, 0.5);
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(
+            180deg,
+            rgba(14, 229, 32, 0.5) 0%,
+            rgba(0, 156, 255, 0.5) 100%
+          );
+          border-radius: 10px;
+          transition: all 0.3s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(
+            180deg,
+            rgba(14, 229, 32, 0.8) 0%,
+            rgba(0, 156, 255, 0.8) 100%
+          );
+        }
+
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(14, 229, 32, 0.5) rgba(31, 31, 31, 0.5);
+          scroll-behavior: smooth;
+        }
+      `}</style>
+
+      <div className="flex flex-col w-full h-full overflow-hidden">
+        <div className="flex-1 overflow-hidden">
+          <div className="h-full flex justify-center items-start py-5 overflow-hidden">
+            <div className="w-[90%] h-[calc(100%-10px)] bg-[#1F1F1F] rounded-2xl overflow-hidden flex flex-col">
+              <div className="flex-1 p-4 custom-scrollbar overflow-y-auto">
+                <div
+                  className={`transition-all duration-500 ease-in-out ${
+                    showNewRequest
+                      ? "opacity-100 translate-y-0 scale-100"
+                      : "opacity-0 translate-y-4 scale-95 pointer-events-none absolute"
+                  }`}
+                >
+                  <NewRequestIncoming />
+                </div>
+
+                <div
+                  className={`flex items-center justify-center h-full transition-all duration-500 ease-in-out ${
+                    !showNewRequest
+                      ? "opacity-100 translate-y-0 scale-100"
+                      : "opacity-0 translate-y-4 scale-95 pointer-events-none absolute"
+                  }`}
+                >
+                  <div className="text-center text-gray-400">
+                    <div className="text-2xl mb-2">📴</div>
+                    <p className="text-lg">شما آفلاین هستید</p>
+                    <p className="text-sm mt-1">
+                      برای دریافت درخواست‌ها آنلاین شوید
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+const NewRequestIncoming = () => {
   const router = useRouter();
   const { showNewRequest } = useAppSelector(
     (state: RootState) => state.gloabal
@@ -52,7 +189,7 @@ const NewRequestIncoming = (props: Props) => {
           }
         );
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setPendingList(data);
 
         // const res = await perform_get(`ai/request/detail/80/`);
@@ -75,9 +212,6 @@ const NewRequestIncoming = (props: Props) => {
     </>
   );
 };
-
-export default NewRequestIncoming;
-
 const RequestCard = ({ data }: { data: Main }) => {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const { pending_debug, pending_consult } = data;

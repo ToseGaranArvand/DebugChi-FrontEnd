@@ -2,6 +2,10 @@ export interface Main {
     consult: ConsultElement[];
     debug:   Debug[];
 }
+export interface IChatListTypes {
+    consult: ConsultElement[];
+    debug:   Debug[];
+}
 
 export interface ConsultElement {
     id:                 number;

@@ -38,6 +38,7 @@ interface IFullDatePickerPropTypes {
   render?: ReactElement<CustomComponentProps>;
   calendarPosition?: string;
   weekPicker?: boolean;
+  minDate?: Date | string;
 }
 
 const FullDatePicker: FC<IFullDatePickerPropTypes> = ({
@@ -53,7 +54,7 @@ const FullDatePicker: FC<IFullDatePickerPropTypes> = ({
   format,
   render,
   calendarPosition,
-  weekPicker,
+  weekPicker,minDate
 }): JSX.Element => {
   return (
     <div>
@@ -81,6 +82,7 @@ const FullDatePicker: FC<IFullDatePickerPropTypes> = ({
         plugins={plugins}
         calendarPosition={calendarPosition}
         weekPicker={weekPicker}
+        minDate={minDate}
       />
     </div>
   );

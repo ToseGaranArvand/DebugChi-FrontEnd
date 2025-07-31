@@ -339,7 +339,7 @@ export const DebugerRequest = () => {
 
   return (
     <>
-      <div className="h-20 w-full flex bg-[#0F0F0F] gap-2 p-5 box-border bg-foreground-50 rounded-tr-2xl rounded-tl-2xl">
+      <div className="h-20 w-full flex bg-[#0F0F0F] gap-2 p-5 box-border rounded-tr-2xl rounded-tl-2xl">
         <Input
           startContent={<Search className="stroke-foreground-300" />}
           placeholder="جستجوی پیام ها ..."
@@ -380,7 +380,7 @@ export const DebugerRequest = () => {
   );
 };
 
-const SupportFAQ = ({ data, user }: { data: any[]; user: Main }) => {
+export const SupportFAQ = ({ data, user }: { data: any[]; user: Main }) => {
   const [state, setState] = useState({
     title: "",
     description: "",
@@ -481,7 +481,7 @@ const SupportFAQ = ({ data, user }: { data: any[]; user: Main }) => {
   );
 };
 
-const RankTab = ({ user }: { user: Main }) => {
+export const RankTab = ({ user }: { user: Main }) => {
   const comments = user.user_main_comment;
   const rateCalc = () => {
     if (!comments.length) return { total: 0, average: 0 };

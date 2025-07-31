@@ -102,7 +102,7 @@ const Conversation = ({
     <div className="w-full flex flex-col gap-2 pt-20 flex-1 overflow-y-auto">
       {chat.map((item: MainChat, index) => {
         return (
-          <div key={index} dir={item.sender == user_data.uuid ? "rtl" : ""}>
+          <div key={index} dir={item.sender == user_data?.uuid ? "rtl" : ""}>
             <Message
               session={session_id}
               data={item.data}
@@ -190,17 +190,19 @@ export const SendCommentMessage = ({
     //   comment,
     //   join_selection,
     // });
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
 
-    const request = await perform_post("api/v1/comments/", {
-      user: user_id,
-      description: comment,
-      tags: join_selection,
-      session_id: session_id,
-      rate: rating,
-    },
-     token || ''
-  );
+    const request = await perform_post(
+      "api/v1/comments/",
+      {
+        user: user_id,
+        description: comment,
+        tags: join_selection,
+        session_id: session_id,
+        rate: rating,
+      },
+      token || ""
+    );
     console.log(request);
     if (request) {
       setIsLoading(false);

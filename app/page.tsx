@@ -19,29 +19,36 @@ import BackgroundGlobalGradient from "@/components/version_1_1/ui/backgorund-gra
 import ClientDebuggerWrapper from "@/components/client-debugger-wrapper";
 import DebuggerExam from "@/components/debugger-exam";
 import { redirect } from "next/navigation";
-import StudentHomePage from "./(student)/page";
-import StudentLayout from "./(student)/layout";
+import { useAuth } from "@/context/AuthContext";
+import StudentHomePage from "./student/dashboard/page";
+import StudentLayout from "./student/layout";
+import DebuggerHomePage from "./debugger/@main/dashboard/page";
+import DebuggerLayout from "./debugger/layout";
 
 export default async function Home() {
   const token = cookies().get("token")?.value;
   const response = token ? await perform_get("auths/user_info/", token) : null;
 
-  const isGuest = !token || !response || !response.user_roles;
-  const isStudent =
-    token && response && response.user_roles.includes("student");
+  if (!token || !response) return redirect("/guest");
 
-  if (isGuest)
-    return (
-      <StudentLayout>
-        <StudentHomePage />
-      </StudentLayout>
-    );
-  if (isStudent)
-    return (
-      <StudentLayout>
-        <StudentHomePage userData={response} />
-      </StudentLayout>
-    );
+  if (response.user_roles.includes("debugger"))
+    return redirect("/debugger/dashboard?side=messages");
+  if (response.user_roles.includes("student"))
+    return redirect("/student/dashboard");
+
+  return redirect("/guest");
+
+  // const isGuest = !token || !response || !response.user_roles;
+  // const isStudent =
+  //   token &&
+  //   response &&
+  //   Array.isArray(response.user_roles) &&
+  //   response.user_roles.includes("student");
+  // const isDebugger =
+  //   token &&
+  //   response &&
+  //   Array.isArray(response.user_roles) &&
+  //   response.user_roles.includes("debugger");
 
   // const client = await clientPromise;
   // const db = client.db("debugchi_front");
@@ -53,19 +60,35 @@ export default async function Home() {
   // }));
 
   // const questions = await perform_get("questions/list/");
+  // if (isGuest)
+  //   return (
+  //     <StudentLayout>
+  //       <StudentHomePage />
+  //     </StudentLayout>
+  //   );
+  // if (isStudent)
+  //   return (
+  //     <StudentLayout>
+  //       <div className="h-full w-full">
+  //         <StudentHomePage userData={response} question={questions} />
+  //       </div>
+  //     </StudentLayout>
+  //   );
 
-  // if (token) {
+  // if (isDebugger) {
   //   const response = await perform_get("auths/user_info/", token);
 
   //   if ("user_roles" in response && "verifications" in response) {
   //     if (response.user_roles.includes("debugger")) {
   //       if (response.verifications.score_verified) {
   //         return (
-  //           <ClientDebuggerWrapper
-  //             response={response}
-  //             serializedFaq={serializedFaq}
-  //             token={token}
-  //           />
+  //           <DebuggerLayout>
+  //             <DebuggerHomePage
+  //               response={response}
+  //               serializedFaq={serializedFaq}
+  //               token={token}
+  //             />
+  //           </DebuggerLayout>
   //         );
   //       } else {
   //         return <DebuggerExam token={token} />;

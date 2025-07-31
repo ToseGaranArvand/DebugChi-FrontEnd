@@ -1,11 +1,23 @@
-import { Main } from "@/components/types/debug-request";
-import { useRequestFilter } from "@/context/RequetsFilterProvider";
-import { perform_get, perform_post } from "@/lib/api";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
-  Accordion,
   AccordionItem,
-  addToast,
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
+  Tab,
+  Tabs,
+  User,
+  Accordion,
+  addToast,
   Card,
   CardBody,
   CardFooter,
@@ -17,14 +29,185 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-  User,
 } from "@heroui/react";
+import { Search } from "lucide-react";
+import {
+  ConsultElement,
+  Debug,
+  IChatListTypes,
+  Main,
+} from "@/components/types/debug-request";
+import ChatList from "@/components/version_1_1/chatList";
+import { useRequestFilter } from "@/context/RequetsFilterProvider";
 import Link from "next/link";
-import React, { useEffect, useState, useMemo } from "react";
+import { perform_get, perform_post } from "@/lib/api";
+import Cookies from "js-cookie";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-type Props = {};
+const MessagesPanel = () => {
+  return (
+    <>
+      <div className="w-full h-full pt-[23px] flex flex-wrap bg-[#0F0F0F] rounded-[16px] flex-col items-center gap-[45px]">
+        <div className="p-[1px] rounded-[10px] bg-gradient-to-r from-[#6E6E6EA6] via-[#6E6E6E] to-transparent">
+          <div className="w-[246px] h-[26px] flex items-center justify-center bg-[#0F0F0F] rounded-[10px]">
+            <h1 className="text-xs">پیام های فعال</h1>
+          </div>
+        </div>
+        <MessagesList />
+        {/* <NotificationActitvities /> */}
+      </div>
+    </>
+  );
+};
+export { MessagesPanel };
 
-const RequetsList = (props: Props) => {
+const MessagesList = () => {
+  const [chatLists, setChatLists] = useState<(ConsultElement | Debug)[]>([]);
+  const [selectedChat, setSelectedChat] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      const token = Cookies.get("token");
+      const response = await perform_get(
+        `api/v1/debug/open_debug_session/`,
+        token
+      );
+
+      if (
+        response &&
+        Array.isArray(response.opened_consult) &&
+        Array.isArray(response.opened_debug)
+      ) {
+        const combinedArr = [
+          ...response.opened_consult,
+          ...response.opened_debug,
+        ];
+
+        setChatLists(combinedArr);
+      } else {
+        console.warn("Invalid response format:", response);
+        setChatLists([]);
+      }
+    };
+
+    fetchChats();
+  }, []);
+  return (
+    <div className="w-full space-y-[3px]">
+      {chatLists.map((chatCard, idx) => (
+        <ChatCard
+          key={idx}
+          data={chatCard}
+          selectedChat={selectedChat}
+          setSelectedChat={setSelectedChat}
+        />
+      ))}
+    </div>
+  );
+};
+
+const ChatCard = ({
+  data,
+  selectedChat,
+  setSelectedChat,
+}: {
+  data: ConsultElement | Debug;
+  selectedChat: string | null;
+  setSelectedChat: Dispatch<SetStateAction<string | null>>;
+}) => {
+  const router = useRouter();
+  const isDebug = "debuger_applicator" in data;
+
+  const profileImage = isDebug
+    ? data.debuger_applicator.image_profile
+    : data.consult_applicator.image_profile;
+
+  const userName = isDebug
+    ? data.debuger_applicator.username
+    : data.consult_applicator.username;
+
+  const lastMessage =
+    data.description.length > 20
+      ? data.description.slice(0, 30) + "..."
+      : data.description;
+
+  const handleOpenChat = () => {
+    setSelectedChat(data.session_id);
+
+    router.push(`/debugger/chat/${data.session_id}?side=messages`);
+  };
+
+  return (
+    <div
+      dir="rtl"
+      onClick={handleOpenChat}
+      className={`${
+        selectedChat === data.session_id ? "border-2 border-[#212121]" : ""
+      } w-full h-20 pr-7 bg-gradient-to-r from-[#1F1F1F3B] via-[#1F1F1F3B] to-[#1f1f1f74]`}
+    >
+      <div className="h-full flex items-center gap-2">
+        <div className="w-10 h-10 border border-white rounded-full overflow-hidden">
+          <Image
+            src={profileImage || "/images/general/Profile.png"}
+            alt=""
+            width={40}
+            height={40}
+          />
+        </div>
+        <div className="pt-0.5">
+          <h1 className="text-sm text-[#9DA5FF]">{userName}</h1>
+          <p className="-mt-0.5 text-[10px] text-[#B7B7B7] font-iranLight">
+            {lastMessage}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const NotificationActitvities = () => {
+  return (
+    <div className=" w-full rounded-xl box-border overflow-y-auto">
+      <ChatList />
+    </div>
+  );
+};
+
+const FilterDropDown = () => {
+  const [selectedKey, setSelectedKey] = React.useState("همه");
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button className="capitalize" variant="bordered">
+          {selectedKey}
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu
+        aria-label="Single selection example"
+        closeOnSelect={true}
+        selectedKeys={new Set([selectedKey])}
+        selectionMode="single"
+        variant="flat"
+        // onSelectionChange={(keys) => {
+        //   const key: any = Array.from(keys)[0];
+        //   setSelectedKey(key);
+        //   if (key == "همه") {
+        //     setFilter("");
+        //   } else {
+        //     setFilter(key);
+        //   }
+        // }}
+      >
+        <DropdownItem key="همه">همه</DropdownItem>
+        <DropdownItem key="دیباگ">دیباگ</DropdownItem>
+        <DropdownItem key="کلاس خصوصی">کلاس خصوصی</DropdownItem>
+        <DropdownItem key="مشاوره">مشاوره</DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
+};
+const RequetsList = () => {
   const [isLoading, setIsloading] = useState<boolean>(false);
   const { filter } = useRequestFilter();
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -181,9 +364,6 @@ const RequetsList = (props: Props) => {
     </div>
   );
 };
-
-export default RequetsList;
-
 const RejectSession = ({
   session_id,
   setRefresh,

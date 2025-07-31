@@ -20,6 +20,7 @@ interface CustomModalProps {
   modalFooter?: React.ReactNode;
   hideCloseButton?: boolean;
   hideOpenButton?: boolean;
+  isDismissable?: boolean;
 }
 
 const CustomModal: FC<CustomModalProps> = ({
@@ -33,6 +34,7 @@ const CustomModal: FC<CustomModalProps> = ({
   children,
   modalFooter,
   hideCloseButton = true,
+  isDismissable = true,
   hideOpenButton = false,
 }) => {
   return (
@@ -46,8 +48,14 @@ const CustomModal: FC<CustomModalProps> = ({
       <Modal
         className="shadow-none"
         isOpen={isOpen}
+        classNames={{
+          body: "!p-0 !w-fit !min-w-[200px]",
+          wrapper:
+            "[&>section]:!w-fit [&>section]:!min-w-[200px] [&>section]:!overflow-visible",
+        }}
         onOpenChange={onOpenChange}
         hideCloseButton={hideCloseButton}
+        isDismissable={isDismissable}
       >
         <ModalContent className="!bg-transparent !border-none">
           {(onClose) => (

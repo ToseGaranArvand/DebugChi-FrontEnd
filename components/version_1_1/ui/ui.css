@@ -58,7 +58,8 @@
 /* ------------- Full Date Picker -------------------- */
 /* common */
 .userDashboardEditDatePicker .rmdp-container,
-.walletVerifySectionDatePicker .rmdp-container {
+.walletVerifySectionDatePicker .rmdp-container,
+.ServiceBookingModalDatePicker .rmdp-container {
   width: 100% !important;
 }
 .errorUserDashboardEditDatePicker .rmdp-input,
@@ -66,14 +67,16 @@
   border: 1px solid #ef4444 !important;
 }
 .userDashboardEditDatePicker .rmdp-input,
-.walletVerifySectionDatePicker .rmdp-input {
+.walletVerifySectionDatePicker .rmdp-input,
+.ServiceBookingModalDatePicker .rmdp-input {
   width: 100% !important;
   margin: 0 !important;
   padding-right: 15px;
   font-size: 14px;
 }
 .userDashboardEditDatePicker .b-deselect,
-.walletVerifySectionDatePicker .b-deselect {
+.walletVerifySectionDatePicker .b-deselect,
+.ServiceBookingModalDatePicker .b-deselect {
   padding-right: 5px;
   margin-left: -5px;
   font-size: 14px !important;
@@ -114,4 +117,13 @@
 .walletVerifySectionDatePicker .rmdp-input::placeholder {
   font-family: iranLight !important;
   color: #545160;
+}
+
+/* ServiceBookingModalDatePicker */
+
+.ServiceBookingModalDatePicker .rmdp-input {
+  height: 40px !important;
+  background: #181818;
+  border: 1px solid #242424;
+  border-radius: 6px;
 }

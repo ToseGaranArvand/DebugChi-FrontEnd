@@ -20,4 +20,7 @@ export interface chatData {
   uuid?: string;
   file?: File;
   created_at?: string;
+
+
+  
 }

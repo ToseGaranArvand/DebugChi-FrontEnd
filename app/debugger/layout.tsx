@@ -33,7 +33,7 @@ const DebuggerLayout = async ({
           </div>
         </div>
         <div dir="rtl" className="w-[386px] h-screen pr-5 pt-8 pb-4">
-          <RightPanelContent role={userRole} />
+          <RightPanelContent role={userRole} userData={response}/>
         </div>
       </main>
     </DebuggerProvider>

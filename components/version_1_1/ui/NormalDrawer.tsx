@@ -1,6 +1,5 @@
 import React from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerBody } from "@heroui/react";
-import { BarsOutlined } from "@ant-design/icons";
 import { useBidFilter } from "@/context/BidFilterContext";
 
 interface NormalDrawerProps {

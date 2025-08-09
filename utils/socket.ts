@@ -1,3 +1,4 @@
+import { Main } from "@/components/types/testChat.type";
 import { socket } from "@/config/socket-config";
 import { setMessage } from "@/redux/slices/chatSocketSlice";
 import { setShowRequest } from "@/redux/slices/globalSlice";
@@ -12,7 +13,7 @@ import { useDispatch } from "react-redux";
     dispatch(setShowRequest(true))
     }else{
 
-      const data = {
+      const data:Main = {
         session_id:session_id,
         sender: sender,
         receiver: reciever,

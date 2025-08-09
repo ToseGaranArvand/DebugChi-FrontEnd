@@ -54,6 +54,8 @@ import { setMessage } from "@/redux/slices/chatSocketSlice";
 import { socket } from "@/config/socket-config";
 import { perform_post } from "@/lib/api";
 import { usePathname } from "next/navigation";
+import { v4 } from "uuid";
+import { Main } from "@/components/types/testChat.type";
 
 interface EditedRequest {
   debug: {
@@ -274,11 +276,12 @@ export const UserCard = ({
   token || ''
   );
 
-    const _data = {
+    const _data:Main = {
       session_id: data.session_id,
       sender: data.debuger.uuid || data.consult.uuid,
       receiver: data.debuger_applicator.uuid || data.consult_applicator.uuid,
       data: {
+        id: v4(),
         type: "payment",
         data: edited_request,
         created_at: String(new Date()),

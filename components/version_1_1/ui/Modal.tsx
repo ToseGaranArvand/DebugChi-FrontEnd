@@ -15,12 +15,14 @@ interface CustomModalProps {
   btnText?: string;
   btnClassName?: string;
   modalHeaderClassname?: string;
+  bodyClassName?: string;
   modalHeader?: React.ReactNode;
   children?: React.ReactNode;
   modalFooter?: React.ReactNode;
   hideCloseButton?: boolean;
   hideOpenButton?: boolean;
   isDismissable?: boolean;
+  style?: React.CSSProperties;
 }
 
 const CustomModal: FC<CustomModalProps> = ({
@@ -36,6 +38,8 @@ const CustomModal: FC<CustomModalProps> = ({
   hideCloseButton = true,
   isDismissable = true,
   hideOpenButton = false,
+  bodyClassName,
+  style,
 }) => {
   return (
     <>
@@ -47,9 +51,10 @@ const CustomModal: FC<CustomModalProps> = ({
 
       <Modal
         className="shadow-none"
+        style={style}
         isOpen={isOpen}
         classNames={{
-          body: "!p-0 !w-fit !min-w-[200px]",
+          body: `!p-0 !w-fit !min-w-[200px] ${bodyClassName}`,
           wrapper:
             "[&>section]:!w-fit [&>section]:!min-w-[200px] [&>section]:!overflow-visible",
         }}

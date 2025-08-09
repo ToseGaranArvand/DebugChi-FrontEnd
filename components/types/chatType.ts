@@ -71,7 +71,7 @@ export interface SessionInfoResponse2 {
 }
 
 export interface chatData2 {
-  id: string;
+  id?: string;
   type: "file" | "text" | "audio" | "picture" | "anydesk" | "code" | "payment";
   text?: string;
   filename?: string;

@@ -139,13 +139,9 @@ const DebuggerExtraServicesPanel = () => {
           `api/v1/debug/get-session-info/${chatRoomId}`
         );
         if (response.data) {
-          console.log(response.teacher_id);
-
           setResponse(response);
 
           if (response.teacher_id === userId) {
-            console.log("dsdsa");
-
             setIsRequestAccepted(true);
           }
         }

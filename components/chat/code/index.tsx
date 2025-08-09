@@ -17,6 +17,7 @@ import { v4 } from "uuid";
 import { setMessage } from "@/redux/slices/chatSocketSlice";
 import { socket } from "@/config/socket-config";
 import { usePathname } from "next/navigation";
+import { Main } from "@/components/types/testChat.type";
 
 // Full list of Monaco-supported languages
 const languages = [
@@ -115,7 +116,7 @@ const SendCode = ({ sender, reciever }: Props) => {
   const session_id = path.split("/")[2];
 
   const sendMessage = () => {
-    const data = {
+    const data: Main = {
       session_id: session_id,
       sender: sender,
       receiver: reciever,

@@ -1,9 +1,11 @@
 // base
 import { FC } from "react";
 // core
-import { ISuggestedAmountsProps } from "@/src/core/types/props/ISuggestedAmountsProps";
+// import { ISuggestedAmountsProps } from "@/src/core/types/props/ISuggestedAmountsProps";
 
-
+interface ISuggestedAmountsProps {
+  amounts: number[];
+}
 
 const SuggestedAmounts: FC<ISuggestedAmountsProps> = ({ amounts }) => {
   return (

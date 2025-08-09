@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 type DebuggerContextType = {
+  // chat
   chatRoomId: string;
   setChatRoomId: (value: string) => void;
   userId?: number;
@@ -24,6 +25,7 @@ export const useDebuggerContext = () => {
 };
 
 export const DebuggerProvider = ({ children }: { children: ReactNode }) => {
+  // chat
   const [chatRoomId, setChatRoomId] = useState<string>("");
   const [userId, setUserId] = useState<number>();
 

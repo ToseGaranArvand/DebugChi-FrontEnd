@@ -29,11 +29,11 @@ const DebuggerHomePage = async () => {
   }));
   return (
     <div
-      className="h-full flex flex-1 box-border gap-4 py-2 overflow-hidden"
+      className="h-full flex flex-1 box-border gap-4 pt-2 overflow-hidden"
       dir="rtl"
     >
       <DebuggerHomePageContainer
-        response={response}
+        token={token}
         serializedFaq={serializedFaq}
       />
     </div>

@@ -45,7 +45,7 @@ import Cookies from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const MessagesPanel = () => {
+const DebuggerMessagesPanel = () => {
   return (
     <>
       <div className="w-full h-full pt-[23px] flex flex-wrap bg-[#0F0F0F] rounded-[16px] flex-col items-center gap-[45px]">
@@ -60,7 +60,7 @@ const MessagesPanel = () => {
     </>
   );
 };
-export { MessagesPanel };
+export { DebuggerMessagesPanel };
 
 const MessagesList = () => {
   const [chatLists, setChatLists] = useState<(ConsultElement | Debug)[]>([]);
@@ -83,6 +83,7 @@ const MessagesList = () => {
           ...response.opened_consult,
           ...response.opened_debug,
         ];
+        console.log(combinedArr);
 
         setChatLists(combinedArr);
       } else {
@@ -135,16 +136,15 @@ const ChatCard = ({
   const handleOpenChat = () => {
     setSelectedChat(data.session_id);
 
-    router.push(`/debugger/chat/${data.session_id}?side=messages`);
+    router.push(`/debugger/chat/${data.session_id}?side=extraServices`);
   };
 
   return (
     <div
-      dir="rtl"
       onClick={handleOpenChat}
       className={`${
-        selectedChat === data.session_id ? "border-2 border-[#212121]" : ""
-      } w-full h-20 pr-7 bg-gradient-to-r from-[#1F1F1F3B] via-[#1F1F1F3B] to-[#1f1f1f74]`}
+        selectedChat === data.session_id ? "" : ""
+      } w-full h-20 pr-7 bg-gradient-to-r from-[#1F1F1F3B] via-[#1F1F1F3B] to-[#1f1f1f74] cursor-pointer`}
     >
       <div className="h-full flex items-center gap-2">
         <div className="w-10 h-10 border border-white rounded-full overflow-hidden">

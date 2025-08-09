@@ -39,7 +39,7 @@ export default function FileUpload({
     "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     "text/plain",
   ],
-  socketUrl = "http://localhost:3001",
+  socketUrl = "http://localhost:3000",
   chunkSize = 1024 * 1024, // 1MB chunks
   onUploadComplete,
   onUploadProgress,
@@ -51,40 +51,40 @@ export default function FileUpload({
 }: FileUploadProps) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  console.log(reciever, sender);
+  // console.log(reciever, sender);
 
   // Initialize socket connection
-  useEffect(() => {
-    const socketInstance = io(socketUrl);
+  // useEffect(() => {
+  //   const socketInstance = io(socketUrl);
 
-    socketInstance.on("connect", () => {
-      console.log("Connected to server");
-      setSocket(socketInstance);
-    });
+  //   socketInstance.on("connect", () => {
+  //     console.log("Connected to server");
+  //     setSocket(socketInstance);
+  //   });
 
-    socketInstance.on("upload-progress", (data) => {
-      if (onUploadProgress) {
-        onUploadProgress(data.progress);
-      }
-    });
+  //   socketInstance.on("upload-progress", (data) => {
+  //     if (onUploadProgress) {
+  //       onUploadProgress(data.progress);
+  //     }
+  //   });
 
-    socketInstance.on("upload-complete", (data) => {
-      if (onUploadComplete) {
-        onUploadComplete(data.fileName, data.path);
-      }
-    });
+  //   socketInstance.on("upload-complete", (data) => {
+  //     if (onUploadComplete) {
+  //       onUploadComplete(data.fileName, data.path);
+  //     }
+  //   });
 
-    socketInstance.on("connect_error", (err) => {
-      console.error("Connection error:", err);
-      if (onUploadError) {
-        onUploadError("Failed to connect to server");
-      }
-    });
+  //   socketInstance.on("connect_error", (err) => {
+  //     console.error("Connection error:", err);
+  //     if (onUploadError) {
+  //       onUploadError("Failed to connect to server");
+  //     }
+  //   });
 
-    return () => {
-      socketInstance.disconnect();
-    };
-  }, [socketUrl, onUploadComplete, onUploadProgress, onUploadError]);
+  //   return () => {
+  //     socketInstance.disconnect();
+  //   };
+  // }, [socketUrl, onUploadComplete, onUploadProgress, onUploadError]);
 
   const validateFile = (file: File): { valid: boolean; error?: string } => {
     // Check file size
@@ -117,12 +117,12 @@ export default function FileUpload({
   };
 
   const uploadFile = async (file: File) => {
-    if (!socket) {
-      if (onUploadError) {
-        onUploadError("Socket connection not established");
-      }
-      return;
-    }
+    // if (!socket) {
+    //   if (onUploadError) {
+    //     onUploadError("Socket connection not established");
+    //   }
+    //   return;
+    // }
 
     const validation = validateFile(file);
     if (!validation.valid) {
@@ -143,30 +143,30 @@ export default function FileUpload({
         const reader = new FileReader();
 
         await new Promise<void>((resolve, reject) => {
-          reader.onload = (e) => {
-            if (e.target?.result) {
-              const base64Chunk = (e.target.result as string).split(",")[1];
+          // reader.onload = (e) => {
+          //   if (e.target?.result) {
+          //     const base64Chunk = (e.target.result as string).split(",")[1];
 
-              socket.emit("upload-chunk", {
-                chunk: base64Chunk,
-                fileName: file.name,
-                offset: start,
-                total: file.size,
-                session_id: session_id,
-                reciever: reciever,
-                sender: sender,
-                data: {
-                  type: isImage ? "picture" : "file",
-                  created_at: new Date(),
-                  status: "pending",
-                },
-              });
+          //     socket.emit("upload-chunk", {
+          //       chunk: base64Chunk,
+          //       fileName: file.name,
+          //       offset: start,
+          //       total: file.size,
+          //       session_id: session_id,
+          //       reciever: reciever,
+          //       sender: sender,
+          //       data: {
+          //         type: isImage ? "picture" : "file",
+          //         created_at: new Date(),
+          //         status: "pending",
+          //       },
+          //     });
 
-              resolve();
-            } else {
-              reject(new Error("Failed to read file chunk"));
-            }
-          };
+          //     resolve();
+          //   } else {
+          //     reject(new Error("Failed to read file chunk"));
+          //   }
+          // };
 
           reader.onerror = () => {
             reject(reader.error);
@@ -204,13 +204,10 @@ export default function FileUpload({
         accept={allowedFileTypes.join(",")}
       />
       <Button
-        radius="full"
-        size="md"
         onPress={handleButtonClick}
         isIconOnly
-        variant="light"
-        startContent={<Paperclip size={16} />}
-        className="bg-lime-300 text-black"
+        className="min-w-0 w-[38px] min-h-0 h-[38px] rounded-full bg-transparent border border-[#6E6E6E]"
+        startContent={<Paperclip className=" w-[17px] h-[17px]" />}
       ></Button>
     </>
   );

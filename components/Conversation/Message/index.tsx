@@ -117,6 +117,163 @@ const ClientMessageBubble = ({ children, time }: { children: React.ReactNode; ti
     </div>
   )
 }
+const PaymentMessage = ({
+  data,
+  sender,
+  reciever,
+  user,
+  status,
+  session_id,
+}: {
+  data: any
+  sender: any
+  user: any
+  reciever: any
+  status: any
+  session_id: string
+}) => {
+  const _date = new Date(data.date).toLocaleDateString("fa-IR", {
+    day: "numeric",
+    hour: "numeric",
+    year: "numeric",
+    minute: "numeric",
+    month: "long",
+  })
+  const [isLoading, setIsLoading] = useState(false)
+
+  const createPayment = async () => {
+    setIsLoading(true)
+    const response = await perform_post(
+      "payment/create_payment/",
+      {
+        session_id: session_id,
+        title: "کلاس خصوصی",
+        description: "توضیحات کلاس خصوصی",
+        amount: 1000,
+      },
+      token || "",
+    )
+    if (response.success) {
+      window.location.href = response.url
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-row-reverse items-start gap-2 h-auto">
+      <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden flex-shrink-0">
+        <img
+          src={
+            user.uuid == sender ? `${process.env.server}/${user?.image_profile}` : `${process.env.server}/${reciever}`
+          }
+          alt={user?.first_name || "User"}
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <div
+        className={`flex flex-col gap-2 relative sm:w-full md:w-2/4 lg:w-1/4 min-h-20 bg-white dark:bg-black  rounded-2xl p-4`}
+      >
+        {/* Payment Data Display */}
+        <div className="flex flex-col">
+          {/* Header with status badge */}
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="font-semibold text-gray-800">اطلاعات پرداخت</h3>
+            <span className="px-2 py-1 text-xs  rounded-full bg-amber-100 text-amber-800 capitalize">
+              {status == "pending" ? "درحال بررسی" : status == "close" ? "لغو درخواست" : "پرداخت شده"}
+            </span>
+          </div>
+          {/* Date and time */}
+          <div className="mb-3">
+            <div className="flex items-center gap-2 text-gray-600 mb-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              <span className="text-sm">{_date}</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="text-sm">{data.time}</span>
+            </div>
+          </div>
+          {/* Session details */}
+          <div className="bg-gray-50 rounded-lg p-3 mb-3">
+            <h4 className=" text-gray-700 mb-2">اطلاعات جلسه</h4>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="text-gray-500">زمان:</div>
+              <div className="text-gray-800 ">
+                {data.class.session_hours}ساعت {data.class.session_minutes > 0 ? `${data.class.session_minutes}m` : ""}
+              </div>
+              <div className="text-gray-500">تعداد جلسات:</div>
+              <div className="text-gray-800 ">{data.class.session_number}</div>
+            </div>
+          </div>
+          {/* Session type */}
+          <div className="flex justify-between flex-wrap gap-2 mb-3 items-center">
+            <div className="flex justify-between flex-wrap gap-2">
+              {Object.entries(data.moshaver).map(([key, value]) => {
+                if (key.startsWith("is_") && value === true) {
+                  const type = key.replace("is_", "")
+                  return (
+                    <span key={key} className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full capitalize">
+                      {type}
+                    </span>
+                  )
+                }
+                return null
+              })}
+            </div>
+            <Chip className="text-foreground">{formatCurrency(1000)}</Chip>
+          </div>
+          {/* Action buttons */}
+          {sender != user.uuid ? (
+            <div className="flex gap-2 mt-2">
+              <Button
+                color="success"
+                fullWidth
+                className="text-background"
+                onPress={createPayment}
+                isLoading={isLoading}
+              >
+                پرداخت
+              </Button>
+              <Button fullWidth variant="bordered" color="danger">
+                لغو
+              </Button>
+            </div>
+          ) : (
+            <div className="w-full h-10 rounded-2xl bg-default-800 flex items-center justify-center text-background">
+              {status == "pending" ? "درحال بررسی" : status == "close" ? "لغو درخواست" : "پرداخت شده"}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const Message = ({ session, data, sender, reciever }: MessageProps) => {
   const [user, setUserData] = useState<any>()
@@ -453,160 +610,4 @@ export default Message
 
 const token = Cookies.get("token")
 
-const PaymentMessage = ({
-  data,
-  sender,
-  reciever,
-  user,
-  status,
-  session_id,
-}: {
-  data: any
-  sender: any
-  user: any
-  reciever: any
-  status: any
-  session_id: string
-}) => {
-  const _date = new Date(data.date).toLocaleDateString("fa-IR", {
-    day: "numeric",
-    hour: "numeric",
-    year: "numeric",
-    minute: "numeric",
-    month: "long",
-  })
-  const [isLoading, setIsLoading] = useState(false)
 
-  const createPayment = async () => {
-    setIsLoading(true)
-    const response = await perform_post(
-      "payment/create_payment/",
-      {
-        session_id: session_id,
-        title: "کلاس خصوصی",
-        description: "توضیحات کلاس خصوصی",
-        amount: 1000,
-      },
-      token || "",
-    )
-    if (response.success) {
-      window.location.href = response.url
-      setIsLoading(false)
-    }
-  }
-
-  return (
-    <div className="flex flex-row-reverse items-start gap-2 h-auto">
-      <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden flex-shrink-0">
-        <img
-          src={
-            user.uuid == sender ? `${process.env.server}/${user?.image_profile}` : `${process.env.server}/${reciever}`
-          }
-          alt={user?.first_name || "User"}
-          className="h-full w-full object-cover"
-        />
-      </div>
-      <div
-        className={`flex flex-col gap-2 relative sm:w-full md:w-2/4 lg:w-1/4 min-h-20 bg-white dark:bg-black  rounded-2xl p-4`}
-      >
-        {/* Payment Data Display */}
-        <div className="flex flex-col">
-          {/* Header with status badge */}
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="font-semibold text-gray-800">اطلاعات پرداخت</h3>
-            <span className="px-2 py-1 text-xs  rounded-full bg-amber-100 text-amber-800 capitalize">
-              {status == "pending" ? "درحال بررسی" : status == "close" ? "لغو درخواست" : "پرداخت شده"}
-            </span>
-          </div>
-          {/* Date and time */}
-          <div className="mb-3">
-            <div className="flex items-center gap-2 text-gray-600 mb-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <span className="text-sm">{_date}</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span className="text-sm">{data.time}</span>
-            </div>
-          </div>
-          {/* Session details */}
-          <div className="bg-gray-50 rounded-lg p-3 mb-3">
-            <h4 className=" text-gray-700 mb-2">اطلاعات جلسه</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="text-gray-500">زمان:</div>
-              <div className="text-gray-800 ">
-                {data.class.session_hours}ساعت {data.class.session_minutes > 0 ? `${data.class.session_minutes}m` : ""}
-              </div>
-              <div className="text-gray-500">تعداد جلسات:</div>
-              <div className="text-gray-800 ">{data.class.session_number}</div>
-            </div>
-          </div>
-          {/* Session type */}
-          <div className="flex justify-between flex-wrap gap-2 mb-3 items-center">
-            <div className="flex justify-between flex-wrap gap-2">
-              {Object.entries(data.moshaver).map(([key, value]) => {
-                if (key.startsWith("is_") && value === true) {
-                  const type = key.replace("is_", "")
-                  return (
-                    <span key={key} className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full capitalize">
-                      {type}
-                    </span>
-                  )
-                }
-                return null
-              })}
-            </div>
-            <Chip className="text-foreground">{formatCurrency(1000)}</Chip>
-          </div>
-          {/* Action buttons */}
-          {sender != user.uuid ? (
-            <div className="flex gap-2 mt-2">
-              <Button
-                color="success"
-                fullWidth
-                className="text-background"
-                onPress={createPayment}
-                isLoading={isLoading}
-              >
-                پرداخت
-              </Button>
-              <Button fullWidth variant="bordered" color="danger">
-                لغو
-              </Button>
-            </div>
-          ) : (
-            <div className="w-full h-10 rounded-2xl bg-default-800 flex items-center justify-center text-background">
-              {status == "pending" ? "درحال بررسی" : status == "close" ? "لغو درخواست" : "پرداخت شده"}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}

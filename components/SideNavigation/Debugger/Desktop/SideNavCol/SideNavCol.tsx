@@ -9,6 +9,7 @@ import { useAppDispatch } from "@/redux/store/store";
 import { showLogin } from "@/redux/slices/globalSlice";
 import { Main } from "@/components/types/user.types";
 import { useAuth } from "@/context/AuthContext";
+import Logout from "@/components/routes/auth/logout";
 
 const linkData = [
   { name: "خانه", path: "/", icon: Home },
@@ -82,7 +83,7 @@ const SideNavCol: FC<ISideNavCol> = ({ userData }) => {
         </div>
       </div>
       <div className="absolute left-1/2 bottom-5 -translate-x-1/2 rounded-full overflow-hidden">
-        {!userData && (
+        {!userData ? (
           <Tooltip
             classNames={{
               content: "!text-[12px]",
@@ -102,6 +103,8 @@ const SideNavCol: FC<ISideNavCol> = ({ userData }) => {
               }
             />
           </Tooltip>
+        ) : (
+          <Logout />
         )}
       </div>
     </div>

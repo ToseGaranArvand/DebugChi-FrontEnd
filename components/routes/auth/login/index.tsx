@@ -48,7 +48,7 @@ export default function Login() {
   const path = usePathname();
   const router = useRouter();
 
-  const [formData, setFormData] = useState({ username: "", password: "" })
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState({
     username: "",
     password: "",
@@ -65,20 +65,23 @@ export default function Login() {
   }, [login]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    const data = Object.fromEntries(new FormData(e.currentTarget))
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
-    Cookies.remove("token")
-    const token = Cookies.get('token');
-    const response = await perform_post("auths/login/", { ...data});
+    const data = Object.fromEntries(new FormData(e.currentTarget));
 
-    console.log(response);
+    Cookies.remove("token");
+    const response = await perform_post("auths/login/", { ...data });
+
     if (response.success && response.user) {
-      Cookies.set("token", response.access);
-      localStorage.setItem("user_data", JSON.stringify(response.user));
-      window.location.href = "/";
-      dispatch(showLogin({ show: false, path: "" }));
+      new Promise<void>((resolve) => {
+        Cookies.set("token", response.access);
+        localStorage.setItem("user_data", JSON.stringify(response.user));
+        resolve();
+      }).then(() => {
+        window.location.href = "/";
+        dispatch(showLogin({ show: false, path: "" }));
+      });
     } else {
       setError({
         ...error,
@@ -102,11 +105,14 @@ export default function Login() {
       }}
       onOpenChange={onOpenChange}
     >
-      <DrawerContent className="relative overflow-hidden" style={{ background: 'rgba(0, 0, 0, .99)' }}>
+      <DrawerContent
+        className="relative overflow-hidden"
+        style={{ background: "rgba(0, 0, 0, .99)" }}
+      >
         {(onClose) => (
           <>
             <BackgroundGlobalGradient />
-            
+
             {/* Close button */}
             <Button
               endContent={<ArrowLeft size={28} />}
@@ -119,7 +125,7 @@ export default function Login() {
               }}
               className="absolute left-4 top-2 z-50"
             />
-            
+
             {/* Main content */}
             <DrawerBody className="h-screen relative z-10">
               <div className="flex flex-col items-center justify-center h-full w-full">
@@ -157,24 +163,30 @@ export default function Login() {
                             autoComplete="current-password"
                             validate={(value) => {
                               if (value.length < 8) {
-                                return "حداقل 8 کاراکتر باید وارد کنید"
+                                return "حداقل 8 کاراکتر باید وارد کنید";
                               }
                             }}
                           />
 
                           <button
                             type="button"
-                            onClick={() => setShowPasswordCustomer(!showPasswordCustomer)}
+                            onClick={() =>
+                              setShowPasswordCustomer(!showPasswordCustomer)
+                            }
                             className="absolute left-3 top-[38px] focus:outline-none"
                             style={{
                               background: "transparent",
                               border: "none",
                               cursor: "pointer",
                               zIndex: 10,
-                              top: "2.5rem", 
+                              top: "2.5rem",
                               left: "1rem",
                             }}
-                            aria-label={showPasswordCustomer ? "پنهان کردن رمز عبور" : "نمایش رمز عبور"}
+                            aria-label={
+                              showPasswordCustomer
+                                ? "پنهان کردن رمز عبور"
+                                : "نمایش رمز عبور"
+                            }
                           >
                             {showPasswordCustomer ? (
                               <EyeOff size={20} className="text-gray-400" />
@@ -191,8 +203,8 @@ export default function Login() {
                             href={"/auth/forget-password/"}
                             className="text-tiny text-blue-500 underline"
                             onPress={() => {
-                              dispatch(showLogin({ show: false, path: "" }))
-                              onClose()
+                              dispatch(showLogin({ show: false, path: "" }));
+                              onClose();
                             }}
                           >
                             بازیابی کلمه عبور؟
@@ -223,8 +235,8 @@ export default function Login() {
                             variant="faded"
                             size="lg"
                             onPress={() => {
-                              onClose()
-                              dispatch(showSignUp({ show: true, path: "" }))
+                              onClose();
+                              dispatch(showSignUp({ show: true, path: "" }));
                             }}
                           >
                             ثبت نام
@@ -232,7 +244,12 @@ export default function Login() {
                         </div>
                         <div className="w-full">
                           {error.server && (
-                            <Alert className="text-right" variant="flat" color="danger" title={error.server} />
+                            <Alert
+                              className="text-right"
+                              variant="flat"
+                              color="danger"
+                              title={error.server}
+                            />
                           )}
                         </div>
                       </Form>

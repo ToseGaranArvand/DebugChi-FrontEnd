@@ -89,7 +89,7 @@ const languages = [
   "vb",
   "xml",
   "yaml",
-].map((lang) => ({ key: lang, label: lang.toUpperCase() })); // Format labels
+].map((lang) => ({ key: lang, label: lang.toUpperCase() }));
 
 const fontSizes = [
   { key: "14", label: "14px" },
@@ -101,48 +101,48 @@ const fontSizes = [
 ];
 
 type Props = {
-  sender:string;
-  reciever:string;
-}
+  sender: string;
+  reciever: string;
+};
 
-const SendCode = ({sender,reciever}:Props) => {
+const SendCode = ({ sender, reciever }: Props) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [fontSize, setFontSize] = useState(18);
   const dispatch = useAppDispatch();
-    const path = usePathname()
-    const session_id = path.split('/')[2]
-  
+  const path = usePathname();
+  const session_id = path.split("/")[2];
+
   const sendMessage = () => {
     const data = {
-      session_id:session_id,
+      session_id: session_id,
       sender: sender,
       receiver: reciever,
       data: {
-        id:v4(),
-        type:"code",
+        id: v4(),
+        type: "code",
         text: code,
-        language:language,
+        language: language,
         created_at: String(new Date()),
-        status:"pending",
-      }
-    }
+        status: "pending",
+      },
+    };
 
-    dispatch(setMessage(data))
-    socket.emit("test_message", data );
+    dispatch(setMessage(data));
+    socket.emit("test_message", data);
   };
   return (
     <>
-<div 
-  className="bg-[#1C1C1CB2] text-white w-5 h-5 rounded-full flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
-  onClick={onOpen}
->
-  <Code size={10} />
-</div>
+      <div
+        className="bg-[#1C1C1CB2] text-white w-5 h-5 rounded-full flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+        onClick={onOpen}
+      >
+        <Code size={10} />
+      </div>
 
       <Drawer
-      hideCloseButton   
+        hideCloseButton
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="3xl"
@@ -152,7 +152,6 @@ const SendCode = ({sender,reciever}:Props) => {
           {(onClose) => (
             <>
               <DrawerHeader className="flex  gap-3">
-
                 <Select
                   label="انتخاب زبان"
                   selectedKeys={[language]}
@@ -164,7 +163,6 @@ const SendCode = ({sender,reciever}:Props) => {
                     <SelectItem key={lang.key}>{lang.label}</SelectItem>
                   ))}
                 </Select>
-
 
                 <Select
                   label="اندازه فونت"
@@ -197,7 +195,6 @@ const SendCode = ({sender,reciever}:Props) => {
               </DrawerBody>
 
               <DrawerFooter>
-                
                 <Button color="primary" variant="flat" onPress={sendMessage}>
                   ارسال کد
                 </Button>

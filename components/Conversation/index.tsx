@@ -116,7 +116,7 @@ const Conversation = ({ user_applicator, user, session_id, is_closed, is_comment
     <div className="flex-1 overflow-y-auto px-4 py-6 flex flex-col">
       {/* Problem Description Box */}
       <div className="w-2/5 mx-auto mb-6">
-        {/* Title with Star */}
+       
         <div className="flex items-center gap-2 mb-4 justify-start">
           <StarIcon />
           <h1 className="text-white text-lg font-semibold">مشکل اتصال پایگاه داده</h1>

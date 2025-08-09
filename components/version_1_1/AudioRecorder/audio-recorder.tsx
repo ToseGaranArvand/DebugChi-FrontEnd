@@ -29,7 +29,7 @@ export default function AudioRecorder({
   console.log(session_id,reciever,sender)
   // Connect to Socket.IO server when component mounts
   useEffect(() => {
-    const socketInstance = io("http://localhost:3001");
+    const socketInstance = io("http://localhost:3000");
 
     socketInstance.on("connect", () => {
       console.log("Connected to Socket.IO server");

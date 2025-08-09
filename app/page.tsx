@@ -17,11 +17,11 @@ import { redirect } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import StudentHomePage from "./student/dashboard/page";
 import StudentLayout from "./student/layout";
-import DebuggerHomePage from "./debugger/@main/dashboard/page";
 import DebuggerLayout from "./debugger/layout";
 
 export default async function Home() {
   const token = cookies().get("token")?.value;
+
   const response = token ? await perform_get("auths/user_info/", token) : null;
 
   if (!token || !response) return redirect("/guest");

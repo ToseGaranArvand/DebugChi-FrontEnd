@@ -31,12 +31,12 @@ export const formatCurrency = (
   text?: boolean
 ) => {
   if (icon) {
-    return `${number.toLocaleString("fa-IR")}`;
+    return `${number.toLocaleString("fa-IR").replace(/٬/g, "،")}`;
   }
   if (text) {
-    return number.toLocaleString("fa-IR");
+    return number.toLocaleString("fa-IR").replace(/٬/g, "،");
   }
-  return number.toLocaleString("fa-IR") + " تومان";
+  return number.toLocaleString("fa-IR").replace(/٬/g, "،") + " تومان";
 };
 
 export const formatTimeAgo = (timestamp: string) => {

@@ -15,6 +15,17 @@ import { CustomModal } from "@/components/version_1_1/ui/Modal";
 import { CustomInput } from "./CustomInput/CustomInput";
 import { CustomUploadBox } from "@/components/version_1_1/ui/CustomUploadBox";
 import { FullDatePicker } from "@/components/version_1_1/ui/FullDatePicker";
+import { perform_get } from "@/lib/api";
+
+type WalletTransaction = {
+  id: number;
+  type: "withdraw" | "deposit"; // یا هر نوع دیگه‌ای که API برمی‌گردونه
+  amount: number;
+  bank_card_to_with_draw: string;
+  created_at: string; // یا Date اگر تبدیلش کنی
+  description: string;
+  status: "pending" | "success"; // بسته به وضعیت‌های ممکن
+};
 
 const cardNumArr = [
   {
@@ -32,6 +43,17 @@ const cardNumArr = [
 ];
 
 const DebuggerWalletPanel = () => {
+  const [walletTransactions, setWalletTransactions] = useState<
+    WalletTransaction[]
+  >([]);
+
+  useEffect(() => {
+    const getWalletTransactions = async () => {
+      const response = await perform_get("payment/wallet/transactions/");
+      setWalletTransactions(response);
+    };
+    getWalletTransactions();
+  }, []);
   return (
     <ModalProvider>
       <div className="h-full flex flex-col bg-[#0F0F0F] px-3 pb-5 rounded-2xl w-[366px]">
@@ -54,7 +76,7 @@ const DebuggerWalletPanel = () => {
                 </div>
               }
             >
-              <HistoryTab />
+              <HistoryTab walletTransactions={walletTransactions} />
             </Tab>
             <Tab
               key="deposit"
@@ -88,9 +110,18 @@ const DebuggerWalletPanel = () => {
 export default DebuggerWalletPanel;
 
 const CartLabel = () => {
-  const withdraw = 100000000;
-  const blockedWithdraw = 30000000;
+  const [withdraw, setWithdraw] = useState(0);
+  const [blockedWithdraw, setBlockedWithdraw] = useState(0);
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const getWithdraw = async () => {
+      const response = await perform_get("payment/wallet/balance/");
+      setWithdraw(response.digital_wallet);
+      setBlockedWithdraw(response.blocked_wallet);
+    };
+    getWithdraw();
+  }, []);
   return (
     <div className="pt-2">
       <h1 className="pr-2 text-lg font-iranBold">کیف پول</h1>
@@ -155,33 +186,34 @@ const CartLabel = () => {
   );
 };
 
-const HistoryTab = () => {
+const HistoryTab = ({
+  walletTransactions,
+}: {
+  walletTransactions: WalletTransaction[];
+}) => {
   return (
     <div>
       <h1 className="text-[#BCBCBC] text-xs">تاریخچه اخیر</h1>
       <div className="mt-[14px] space-y-[9px]">
-        <HistoryCard type="deposit" />
-        <HistoryCard type="withdraw" />
-        <HistoryCard type="withdraw" />
-        <HistoryCard type="deposit" />
-        <HistoryCard type="deposit" />
-        <HistoryCard type="withdraw" />
-        <HistoryCard type="withdraw" />
-        <HistoryCard type="deposit" />
+        {walletTransactions.map((transaction, idx) => {
+          return <HistoryCard key={idx} transaction={transaction} />;
+        })}
       </div>
     </div>
   );
 };
-const HistoryCard: FC<{ type: "deposit" | "withdraw" }> = ({ type }) => {
+const HistoryCard: FC<{ transaction: WalletTransaction }> = ({
+  transaction,
+}) => {
   return (
     <div className="w-full h-[131px] p-2.5 rounded-xl bg-[#18151E]">
       <div className="flex items-center justify-between">
         <div className="w-[70px] h-[23px] pt-[3px] bg-[#2E2A37] rounded-md text-center text-xs text-[#9BD702] font-iranRegular">
-          {type === "deposit" ? "واریزی" : "برداشت"} موفق
+          {transaction.type === "deposit" ? "واریزی" : "برداشت"} موفق
         </div>
         <Image
           src={
-            type === "deposit"
+            transaction.type === "deposit"
               ? "/images/svg/dashboardTap/DownSvg.svg"
               : "/images/svg/dashboardTap/UpSvg.svg"
           }
@@ -192,11 +224,11 @@ const HistoryCard: FC<{ type: "deposit" | "withdraw" }> = ({ type }) => {
       </div>
       <div className="mt-[19px] pr-1 pl-3 flex items-center justify-between">
         <span className="text-xs">
-          {type === "deposit" ? "واریز به" : "برداشت از"} حساب شما
+          {transaction.type === "deposit" ? "واریز به" : "برداشت از"} حساب شما
         </span>
         <span
           className={`text-lg ${
-            type === "deposit" ? "text-[#9BD702]" : "text-[#FF4A4A]"
+            transaction.type === "deposit" ? "text-[#9BD702]" : "text-[#FF4A4A]"
           }`}
         >
           ۲۵۰،۰۰۰
@@ -205,7 +237,7 @@ const HistoryCard: FC<{ type: "deposit" | "withdraw" }> = ({ type }) => {
       <div className="h-[1px] mt-1 bg-gradient-to-r from-[#18151E] via-[#362e42] to-[#18151E]"></div>
       <div className="mt-[5px] pr-1 pl-3 flex items-center justify-between">
         <span className="text-xs">
-          تاریخ {type === "deposit" ? "واریزی" : "برداشت"}
+          تاریخ {transaction.type === "deposit" ? "واریزی" : "برداشت"}
         </span>
         <span className="text-sm font-iranRegular">۴۵ / ۰۴ / ۱۴۰۳</span>
       </div>
@@ -282,6 +314,8 @@ const GetMoneyTab = () => {
 
 const GetMoneyForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const {
     register,
     handleSubmit,
@@ -296,11 +330,17 @@ const GetMoneyForm = () => {
     console.log("Amount to withdraw:", data);
     // می‌تونی اینجا درخواست API بزنی
   };
+
   const goToAddCard = () => {
-    router.push("?step=addCard");
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("step", "addCard"); // اضافه یا آپدیت step
+    router.push(`?${params.toString()}`);
   };
+
   const goToVerifyCard = () => {
-    router.push("?step=verifyCard");
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("step", "verifyCard");
+    router.push(`?${params.toString()}`);
   };
 
   return (
@@ -413,7 +453,7 @@ const CardManageMentSection = () => {
   const router = useRouter();
 
   const goBack = () => {
-    router.replace("/user/dashboard");
+    router.back(); // برمی‌گرده به صفحه قبلی در هیستوری مرورگر
   };
   return (
     <div>
@@ -445,8 +485,9 @@ const AddCardForm = () => {
   } = useForm<{
     sheba: string;
   }>();
+
   const goBack = () => {
-    router.replace("/user/dashboard");
+    router.back(); // برمی‌گرده به صفحه قبلی در هیستوری مرورگر
   };
   const onSubmit = (data: { sheba: string }) => {
     console.log("Amount to withdraw:", data);
@@ -635,7 +676,7 @@ const VerifySection = () => {
   });
 
   const goBack = () => {
-    router.replace("/user/dashboard");
+    router.back(); // برمی‌گرده به صفحه قبلی در هیستوری مرورگر
   };
   const onSubmit = (data: userCurrentJobsType) => {
     console.log(data);

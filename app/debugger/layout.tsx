@@ -14,6 +14,7 @@ const DebuggerLayout = async ({
   side: React.ReactNode;
 }) => {
   const token = (await cookies()).get("token")?.value;
+
   const response = token ? await perform_get("auths/user_info/", token) : null;
   const userRole = response?.user_roles?.includes("debugger")
     ? "debugger"
@@ -33,7 +34,7 @@ const DebuggerLayout = async ({
           </div>
         </div>
         <div dir="rtl" className="w-[386px] h-screen pr-5 pt-8 pb-4">
-          <RightPanelContent role={userRole} userData={response}/>
+          <RightPanelContent role={userRole} userData={response} />
         </div>
       </main>
     </DebuggerProvider>

@@ -5,7 +5,6 @@ import ClientProvider from "./clientProvider";
 import Header from "@/components/Layout/Header";
 import { NavigationProgress } from "@/components/Tools/NavigationProgress";
 import { ToastProvider } from "@heroui/react";
-import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -45,7 +44,7 @@ export default function RootLayout({
         <NavigationProgress />
         <ClientProvider>
           <ToastProvider placement="top-center" />
-          <AuthProvider>{children}</AuthProvider>
+          {children}
 
           {/* <Toaster position="top-center" richColors /> */}
         </ClientProvider>

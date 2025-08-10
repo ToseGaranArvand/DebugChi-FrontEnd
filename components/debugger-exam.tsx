@@ -259,7 +259,7 @@ export default function DebuggerExam({ token }: DebuggerExamProps) {
             <Button
               onClick={startExam}
               disabled={loading}
-              className="z-40 bg-[#2e3784] hover:bg-[#3a45a0] text-white rounded-md py-6 px-36 rounded-3xl text-lg font-medium transition-colors disabled:opacity-50"
+              className="z-40 bg-[#2e3784] hover:bg-[#3a45a0] text-white py-6 px-36 rounded-3xl text-lg font-medium transition-colors disabled:opacity-50"
             >
               {loading ? "در حال بارگذاری..." : "شروع"}
             </Button>

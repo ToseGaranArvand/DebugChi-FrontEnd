@@ -5,6 +5,7 @@ import { SideNavCol } from "@/components/SideNavigation/Student/Desktop/SideNavC
 
 const StudentLayout = async ({ children }: { children: React.ReactNode }) => {
   const token = (await cookies()).get("token")?.value;
+
   const response = token ? await perform_get("auths/user_info/", token) : null;
   const isGuest = !token || !response || !response.user_roles;
 

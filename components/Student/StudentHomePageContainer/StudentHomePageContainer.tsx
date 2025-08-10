@@ -187,7 +187,7 @@ const StudentHomePageContainer: FC<IStudentHomePageContainer> = ({
   return (
     <>
       <div className="w-full overflow-hidden pb-6 flex-1 flex flex-col items-center justify-center">
-        {messages.length > 0 ? (
+        {messages.length > 0 && userRole ? (
           <div className="overflow-hidden flex-1 w-full min-h-0">
             <StudentAiChatBox messages={messages} aiResponse={aiResponse} />
           </div>

@@ -248,6 +248,7 @@ const Header = (props: Props) => {
     const token = Cookies.get("token");
     const getUserData = async () => {
       const response = await perform_get("auths/user_info/");
+      
       console.log(response);
       setUserData(response);
     };

@@ -10,10 +10,10 @@ import { FC, useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/store/store";
 import { showLogin } from "@/redux/slices/globalSlice";
 import { Main } from "@/components/types/user.types";
-import { useAuth } from "@/context/AuthContext";
 
 const StudentLayout = async ({ children }: { children: React.ReactNode }) => {
   const token = (await cookies()).get("token")?.value;
+  
   const response = token ? await perform_get("auths/user_info/", token) : null;
   const isGuest = !token || !response || !response.user_roles;
 

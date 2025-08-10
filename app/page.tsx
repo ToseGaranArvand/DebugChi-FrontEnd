@@ -14,17 +14,19 @@ import BackgroundGlobalGradient from "@/components/version_1_1/ui/backgorund-gra
 import ClientDebuggerWrapper from "@/components/client-debugger-wrapper";
 import DebuggerExam from "@/components/debugger-exam";
 import { redirect } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 import StudentHomePage from "./student/dashboard/page";
 import StudentLayout from "./student/layout";
 import DebuggerLayout from "./debugger/layout";
+import { log } from "console";
 
 export default async function Home() {
   const token = cookies().get("token")?.value;
 
+  if (!token) return redirect("/guest");
+
   const response = token ? await perform_get("auths/user_info/", token) : null;
 
-  if (!token || !response) return redirect("/guest");
+  if (!response) return redirect("/guest");
 
   if (response.user_roles.includes("debugger"))
     return redirect("/debugger/dashboard?side=messages");
@@ -123,5 +125,3 @@ export default async function Home() {
 // 09303362613      دانش اموز
 // 09361226758
 // 12345678
-
-// const { user, isLoading } = useAuth();

@@ -3,6 +3,8 @@ import BackgroundGlobalGradient from "@/components/version_1_1/ui/backgorund-gra
 import { SideNavCol } from "@/components/SideNavigation/Guest/Desktop/SideNavCol/SideNavCol";
 
 const GuestLayout = ({ children }: { children: React.ReactNode }) => {
+
+  
   return (
     <main className="w-screen h-screen overflow-hidden relative flex">
       <BackgroundGlobalGradient />

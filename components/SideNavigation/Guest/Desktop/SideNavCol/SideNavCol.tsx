@@ -8,7 +8,6 @@ import { FC, useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/store/store";
 import { showLogin } from "@/redux/slices/globalSlice";
 import { Main } from "@/components/types/user.types";
-import { useAuth } from "@/context/AuthContext";
 
 const linkData = [
   { name: "خانه", path: "/", icon: Home },
